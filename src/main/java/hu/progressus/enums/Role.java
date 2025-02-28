@@ -1,6 +1,6 @@
 package hu.progressus.enums;
 
-public enum ROLE {
+public enum Role {
   STUDENT,
   TEACHER
 }

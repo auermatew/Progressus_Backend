@@ -6,43 +6,43 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "teacher_classes")
-public class TeacherClass {
+@Table(name = "teacher_class_lessons")
+public class TeacherClassLesson {
   @Id
   @GeneratedValue
   private Long id;
 
   @ManyToOne
   @NotNull
-  private Teacher teacher;
+  private TeacherClass teacherClass;
 
+  @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
   @NotNull
-  private String title;
+  private LocalDateTime start_date;
 
+  @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
   @NotNull
-  private String description;
+  private LocalDateTime end_date;
 
-  @NotNull
-  private Integer price;
+  @ManyToOne
+  private User user;
 
-  @OneToMany(mappedBy = "teacherClass", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private List<TeacherClassSubject> subjects;
-
-  @OneToMany(mappedBy = "teacherClass", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private List<TeacherClassLesson> teacherClassLessons;
+  @OneToOne(mappedBy = "teacherClassLesson", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private Transaction transaction;
 }

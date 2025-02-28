@@ -1,6 +1,6 @@
 package hu.progressus.entity;
 
-import hu.progressus.enums.ROLE;
+import hu.progressus.enums.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,8 +16,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -43,6 +45,7 @@ public class User {
 
   private String profilePicture;
 
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   @NotNull
   private LocalDate dateOfBirth;
 
@@ -54,18 +57,30 @@ public class User {
   private Integer balance;
 
   @NotNull
-  private ROLE role;
+  private Role role;
 
-  @OneToOne(mappedBy = "user")
+  @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Teacher teacher;
+
+  @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private BillingDetails billingDetails;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<UserInterest> userInterests;
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private List<TeacherClassLesson> teacherClassLessons;
 
   @PrePersist
   private void onCreate(){
     if (this.balance == null){
       this.balance = 0;
+    }
+    if (this.userInterests == null){
+      this.userInterests = new ArrayList<>();
+    }
+    if (this.teacherClassLessons == null){
+      this.teacherClassLessons = new ArrayList<>();
     }
   }
 }
