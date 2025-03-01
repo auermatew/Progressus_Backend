@@ -1,6 +1,7 @@
 package hu.progressus.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -23,9 +24,9 @@ public class TeacherSubjectTag {
   @GeneratedValue
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Teacher teacher;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Subject subject;
 }

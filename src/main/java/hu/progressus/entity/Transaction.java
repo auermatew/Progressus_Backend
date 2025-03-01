@@ -2,6 +2,7 @@ package hu.progressus.entity;
 
 import hu.progressus.enums.TransactionStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -27,11 +28,11 @@ public class Transaction {
   @GeneratedValue
   private Long id;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @NotNull
   private TeacherClassLesson teacherClassLesson;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @NotNull
   private BillingDetails billingDetails;
 

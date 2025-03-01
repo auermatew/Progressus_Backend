@@ -26,17 +26,17 @@ public class Teacher {
   @GeneratedValue
   private Long id;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   private User user;
 
   private String contactPhone;
 
   private String contactEmail;
 
-  @OneToMany(mappedBy = "teacher",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
   private List<TeacherSubjectTag> subjects;
 
-  @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
   private List<TeacherClass> teacherClasses;
 
 }

@@ -27,7 +27,7 @@ public class TeacherClass {
   @GeneratedValue
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @NotNull
   private Teacher teacher;
 
@@ -40,9 +40,9 @@ public class TeacherClass {
   @NotNull
   private Integer price;
 
-  @OneToMany(mappedBy = "teacherClass", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "teacherClass", cascade = CascadeType.ALL)
   private List<TeacherClassSubject> subjects;
 
-  @OneToMany(mappedBy = "teacherClass", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "teacherClass", cascade = CascadeType.ALL)
   private List<TeacherClassLesson> teacherClassLessons;
 }

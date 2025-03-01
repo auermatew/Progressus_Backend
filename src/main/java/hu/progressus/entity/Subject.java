@@ -3,7 +3,6 @@ package hu.progressus.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -29,12 +28,12 @@ public class Subject {
   @Column(unique = true)
   private String subject;
 
-  @OneToMany(mappedBy = "subject",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
   private List<TeacherSubjectTag> teacherSubjectTags;
 
-  @OneToMany(mappedBy = "subject", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
   private List<UserInterest> userInterests;
 
-  @OneToMany(mappedBy = "subject", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
   private List<TeacherClassSubject> teacherClassSubjects;
 }

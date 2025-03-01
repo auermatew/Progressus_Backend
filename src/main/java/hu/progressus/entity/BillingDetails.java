@@ -27,7 +27,7 @@ public class BillingDetails {
   private Long id;
 
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   private User user;
 
   private String address_city;
@@ -38,7 +38,7 @@ public class BillingDetails {
 
   private String address_country;
 
-  @OneToMany(mappedBy = "billingDetails", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "billingDetails",  cascade = CascadeType.ALL)
   private List<Transaction> transaction;
 
 }

@@ -28,7 +28,7 @@ public class TeacherClassLesson {
   @GeneratedValue
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @NotNull
   private TeacherClass teacherClass;
 
@@ -40,9 +40,9 @@ public class TeacherClassLesson {
   @NotNull
   private LocalDateTime end_date;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  @OneToOne(mappedBy = "teacherClassLesson", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "teacherClassLesson", cascade = CascadeType.ALL)
   private Transaction transaction;
 }
