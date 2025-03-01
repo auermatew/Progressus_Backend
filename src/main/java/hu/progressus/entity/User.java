@@ -38,6 +38,7 @@ public class User {
   private String fullName;
 
   @NotNull
+  @Column(unique = true)
   private String email;
 
   @NotNull
@@ -81,6 +82,9 @@ public class User {
     }
     if (this.teacherClassLessons == null){
       this.teacherClassLessons = new ArrayList<>();
+    }
+    if(this.profilePicture == null){
+      this.profilePicture = "defaultPfp.png";
     }
   }
 }
