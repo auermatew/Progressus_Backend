@@ -1,6 +1,6 @@
 package hu.progressus.entity;
 
-import hu.progressus.enums.TransactionStatus;
+import hu.progressus.enums.LessonReservationStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -47,5 +47,5 @@ public class Transaction {
   private LocalDateTime date;
 
   @NotNull
-  private TransactionStatus status;
+  private LessonReservationStatus status;
 }

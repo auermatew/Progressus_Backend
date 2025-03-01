@@ -33,10 +33,10 @@ public class AuthResponse {
     this.email = user.getEmail();
     this.profilePicture = user.getProfilePicture();
     this.dateOfBirth = user.getDateOfBirth();
-    this.phoneNumber = getPhoneNumber();
-    this.description = getDescription();
-    this.balance = getBalance();
-    this.role = getRole();
+    this.phoneNumber = user.getPhoneNumber();
+    this.description = user.getDescription();
+    this.balance = user.getBalance();
+    this.role = user.getRole();
   }
 
   public static AuthResponse of(User user){

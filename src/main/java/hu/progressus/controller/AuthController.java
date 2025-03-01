@@ -4,6 +4,7 @@ import hu.progressus.dto.CreateUserDto;
 import hu.progressus.dto.LoginDto;
 import hu.progressus.response.AuthResponse;
 import hu.progressus.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,17 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/registration")
-  public ResponseEntity<AuthResponse> register(@Valid @RequestBody CreateUserDto dto){
-    return new ResponseEntity<>(authService.register(dto), HttpStatus.CREATED);
+  public ResponseEntity<AuthResponse> register(@Valid @RequestBody CreateUserDto dto, HttpServletResponse response) {
+    return new ResponseEntity<>(authService.register(dto, response), HttpStatus.CREATED);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDto dto){
-    return ResponseEntity.ok(authService.login(dto));
+  public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDto dto, HttpServletResponse response) {
+    return ResponseEntity.ok(authService.login(dto, response));
+  }
+
+  @PostMapping("/authenticate")
+  public ResponseEntity<AuthResponse> authenticate() {
+    return ResponseEntity.ok(authService.authenticate());
   }
 }

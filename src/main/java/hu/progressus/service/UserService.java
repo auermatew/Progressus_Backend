@@ -1,6 +1,9 @@
 package hu.progressus.service;
 
 import hu.progressus.repository.UserRepository;
+import hu.progressus.response.AuthResponse;
+import hu.progressus.util.UserUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,4 +20,7 @@ public class UserService{
     }
   }
 
+  public AuthResponse edit(HttpServletRequest request){
+    return AuthResponse.of(UserUtils.currentUser());
+  }
 }

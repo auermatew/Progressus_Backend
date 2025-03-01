@@ -1,6 +1,6 @@
 package hu.progressus.enums;
 
-public enum TransactionStatus {
+public enum LessonReservationStatus {
   PENDING,
   APPROVED,
   DECLINED

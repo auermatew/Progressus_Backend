@@ -3,7 +3,7 @@
 ---
 ## Fejlesztési terv 👽
 #### 1. Entities, adatmodell ✅
-#### 2. Autentikáció JWT-vel és cookies
+#### 2. Autentikáció JWT-vel és cookies ✅
 #### 3. Tanár feautures
    - authorization
    - tanórák
