@@ -23,6 +23,7 @@ public class AuthService {
   private final UserService userService;
   private final UserRepository userRepository;
   private final JwtService jwtService;
+  private final UserUtils userUtils;
 
   public Cookie tokenCookie(User user){
     var token = JwtService.generateToken(user);
@@ -82,7 +83,7 @@ public class AuthService {
   }
 
   public AuthResponse authenticate(){
-    User user = UserUtils.currentUser();
+    User user = userUtils.currentUser();
     if(user == null ) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "you need to log in");
     return AuthResponse.of(user);
   }

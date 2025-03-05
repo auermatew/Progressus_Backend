@@ -20,7 +20,7 @@ public class UserService{
     }
   }
 
-  public AuthResponse edit(HttpServletRequest request){
+ /* public AuthResponse edit(HttpServletRequest request){
     return AuthResponse.of(UserUtils.currentUser());
-  }
+  } */
 }

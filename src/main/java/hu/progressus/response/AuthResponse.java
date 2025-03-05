@@ -1,5 +1,6 @@
 package hu.progressus.response;
 
+import hu.progressus.entity.Teacher;
 import hu.progressus.entity.User;
 import hu.progressus.enums.Role;
 
@@ -27,6 +28,8 @@ public class AuthResponse {
 
   private Role role;
 
+  private Teacher teacher;
+
   protected AuthResponse (User user){
     this.id = user.getId();
     this.fullName = user.getFullName();
@@ -37,7 +40,10 @@ public class AuthResponse {
     this.description = user.getDescription();
     this.balance = user.getBalance();
     this.role = user.getRole();
+
+    this.teacher = user.getTeacher();
   }
+
 
   public static AuthResponse of(User user){
     return new AuthResponse(user);

@@ -1,5 +1,6 @@
 package hu.progressus.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,6 +27,7 @@ public class Teacher {
   @GeneratedValue
   private Long id;
 
+  @JsonBackReference
   @OneToOne(fetch = FetchType.LAZY)
   private User user;
 

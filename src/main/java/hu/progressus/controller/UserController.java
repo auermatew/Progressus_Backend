@@ -18,6 +18,7 @@ public class UserController {
 
   @PostMapping("/edit")
   public ResponseEntity<AuthResponse> editProfile(HttpServletRequest request){
-    return ResponseEntity.ok(userService.edit(request));
+    return null;
+        //ResponseEntity.ok(userService.edit(request));
   }
 }
