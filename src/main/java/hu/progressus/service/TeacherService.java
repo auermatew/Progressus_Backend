@@ -18,13 +18,17 @@ import org.springframework.web.server.ResponseStatusException;
 public class TeacherService {
   private final UserUtils userUtils;
   private final UserRepository userRepository;
+  private final UserService userService;
   private final TeacherRepository teacherRepository;
+
+  //TODO : Check if emails, phones exist before registering
 
   public AuthResponse registerAsTeacher(CreateTeacherDto dto){
     User user = userUtils.currentUser();
     if(user.getTeacher() != null){
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "already a teacher");
     }
+    userService.ThrowUserEmailExists(dto.getContactEmail());
     user.setTeacher(
         Teacher.builder().user(user)
         .contactEmail(dto.getContactEmail())
@@ -47,7 +51,7 @@ public class TeacherService {
     userRepository.save(user);
   }
 
-  public Teacher getTeacher(){
-    return null;
+  public Teacher getTeacherById(Long teacherId){
+    return teacherRepository.findById(teacherId).orElseThrow();
   }
 }
