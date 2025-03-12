@@ -21,14 +21,13 @@ public class TeacherService {
   private final UserService userService;
   private final TeacherRepository teacherRepository;
 
-  //TODO : Check if emails, phones exist before registering
-
   public AuthResponse registerAsTeacher(CreateTeacherDto dto){
     User user = userUtils.currentUser();
     if(user.getTeacher() != null){
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "already a teacher");
     }
     userService.ThrowUserEmailExists(dto.getContactEmail());
+    userService.ThrowUserPhoneExists(dto.getContactPhone());
     user.setTeacher(
         Teacher.builder().user(user)
         .contactEmail(dto.getContactEmail())
