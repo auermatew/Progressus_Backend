@@ -59,7 +59,7 @@ public class TeacherService {
   }
 
   public Page<Teacher> getAllTeachers(Pageable pageable){
-    return teacherRepository.findAll(pageable);
+    return teacherRepository.findAllByOrderByIdAsc(pageable);
   }
 
   public TeacherResponse editTeacher(EditTeacherDto dto){

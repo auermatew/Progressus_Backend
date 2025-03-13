@@ -31,6 +31,7 @@ public class UserService{
 
   public AuthResponse editUser(EditUserDto dto){
     User user = userUtils.currentUser();
+    ThrowUserPhoneExists(dto.getPhoneNumber());
     if (dto.getFullName() != null) {
       user.setFullName(dto.getFullName());
     }

@@ -1,5 +1,6 @@
 package hu.progressus.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,6 +30,7 @@ public class TeacherClass {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @NotNull
+  @JsonBackReference
   private Teacher teacher;
 
   @NotNull

@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +43,8 @@ public class TeacherController {
   }
 
   @GetMapping("/all")
-  public ResponseEntity<Page<TeacherResponse>> getAllTeachers(Pageable pageable){
+  public ResponseEntity<Page<TeacherResponse>> getAllTeachers(@PageableDefault(size = 15)
+      Pageable pageable){
     Page<Teacher> teacherPage = teacherService.getAllTeachers(pageable);
 
     Page<TeacherResponse> teacherResponses = teacherPage.map(TeacherResponse::of);

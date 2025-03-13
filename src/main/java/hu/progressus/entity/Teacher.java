@@ -1,6 +1,7 @@
 package hu.progressus.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,6 +40,7 @@ public class Teacher {
   private List<TeacherSubjectTag> subjects;
 
   @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+  @JsonManagedReference
   private List<TeacherClass> teacherClasses;
 
 }
