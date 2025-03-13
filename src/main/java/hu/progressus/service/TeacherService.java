@@ -1,14 +1,18 @@
 package hu.progressus.service;
 
 import hu.progressus.dto.CreateTeacherDto;
+import hu.progressus.dto.EditTeacherDto;
 import hu.progressus.entity.Teacher;
 import hu.progressus.entity.User;
 import hu.progressus.enums.Role;
 import hu.progressus.repository.TeacherRepository;
 import hu.progressus.repository.UserRepository;
 import hu.progressus.response.AuthResponse;
+import hu.progressus.response.TeacherResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -52,5 +56,25 @@ public class TeacherService {
 
   public Teacher getTeacherById(Long teacherId){
     return teacherRepository.findById(teacherId).orElseThrow();
+  }
+
+  public Page<Teacher> getAllTeachers(Pageable pageable){
+    return teacherRepository.findAll(pageable);
+  }
+
+  public TeacherResponse editTeacher(EditTeacherDto dto){
+    User user = userUtils.currentUser();
+    if(user.getTeacher() == null){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "not a teacher");
+    }
+    Teacher teacher = user.getTeacher();
+    if(dto.getContactEmail() != null){
+      teacher.setContactEmail(dto.getContactEmail());
+    }
+    if(dto.getContactPhone() != null){
+      teacher.setContactPhone(dto.getContactPhone());
+    }
+    teacher = teacherRepository.save(teacher);
+    return TeacherResponse.of(teacher);
   }
 }
