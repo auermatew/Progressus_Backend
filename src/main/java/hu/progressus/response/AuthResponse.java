@@ -28,7 +28,7 @@ public class AuthResponse {
 
   private Role role;
 
-  private Teacher teacher;
+  private TeacherResponseLite teacher;
 
   protected AuthResponse (User user){
     this.id = user.getId();
@@ -41,7 +41,9 @@ public class AuthResponse {
     this.balance = user.getBalance();
     this.role = user.getRole();
 
-    this.teacher = user.getTeacher();
+    if (user.getTeacher() != null) {
+      this.teacher = TeacherResponseLite.of(user.getTeacher());
+    }
   }
 
 

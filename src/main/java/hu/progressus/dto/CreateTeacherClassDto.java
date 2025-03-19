@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class CreateTeacherClassDto {
 
@@ -24,4 +26,6 @@ public class CreateTeacherClassDto {
   @Max(value = 1000000, message = "Price must be at most 1000000")
   private Integer price;
 
+  @NotNull
+  private List<String> subjects;
 }

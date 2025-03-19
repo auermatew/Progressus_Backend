@@ -23,10 +23,10 @@ public class TeacherClassSubject {
   @GeneratedValue
   private Long id;
 
+
   @ManyToOne(fetch = FetchType.LAZY)
   private TeacherClass teacherClass;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Subject subject;
-
 }

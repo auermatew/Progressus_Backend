@@ -1,12 +1,14 @@
 package hu.progressus.controller;
 
 import hu.progressus.dto.CreateTeacherClassDto;
+import hu.progressus.dto.EditTeacherClassDto;
 import hu.progressus.response.TeacherClassResponse;
 import hu.progressus.service.TeacherClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,12 @@ public class TeacherClassController {
     return ResponseEntity.ok(teacherClassService.createTeacherClass(dto));
   }
 
+  @PatchMapping("/edit/{teacherClassId}")
+  public ResponseEntity<TeacherClassResponse> editTeacherClass(@RequestBody EditTeacherClassDto dto) {
+    return ResponseEntity.ok(teacherClassService.editTeacherClass(dto));
+  }
+
+
   @DeleteMapping("/delete/{teacherClassId}")
   public void deleteTeacherClass(@PathVariable Long teacherClassId){
     teacherClassService.deleteTeacherClass(teacherClassId);
@@ -35,4 +43,5 @@ public class TeacherClassController {
   public ResponseEntity<List<TeacherClassResponse>> getClassesOfTeacher(@PathVariable Long teacherId){
     return ResponseEntity.ok(teacherClassService.getClassesOfTeacher(teacherId));
   }
+
 }

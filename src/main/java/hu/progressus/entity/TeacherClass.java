@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -47,4 +49,14 @@ public class TeacherClass {
 
   @OneToMany(mappedBy = "teacherClass", cascade = CascadeType.ALL)
   private List<TeacherClassLesson> teacherClassLessons;
+
+  @PrePersist
+  private void onCreate() {
+    if (this.subjects == null) {
+      this.subjects = new ArrayList<>();
+    }
+    if (this.teacherClassLessons == null) {
+      this.teacherClassLessons = new ArrayList<>();
+    }
+  }
 }

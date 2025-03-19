@@ -28,6 +28,8 @@ public class Subject {
   @Column(unique = true)
   private String subject;
 
+  private boolean isVerified;
+
   @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
   private List<TeacherSubjectTag> teacherSubjectTags;
 
