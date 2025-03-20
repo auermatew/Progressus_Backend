@@ -29,8 +29,8 @@ public class TeacherClassController {
   }
 
   @PatchMapping("/edit/{teacherClassId}")
-  public ResponseEntity<TeacherClassResponse> editTeacherClass(@RequestBody EditTeacherClassDto dto) {
-    return ResponseEntity.ok(teacherClassService.editTeacherClass(dto));
+  public ResponseEntity<TeacherClassResponse> editTeacherClass(@PathVariable Long teacherClassId, @RequestBody EditTeacherClassDto dto){
+    return ResponseEntity.ok(teacherClassService.editTeacherClass(teacherClassId, dto));
   }
 
 

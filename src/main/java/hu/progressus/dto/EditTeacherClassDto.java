@@ -6,8 +6,6 @@ import java.util.List;
 @Data
 public class EditTeacherClassDto {
 
-  private Long teacherClassId;
-
   private String title;
   private String description;
   private Integer price;

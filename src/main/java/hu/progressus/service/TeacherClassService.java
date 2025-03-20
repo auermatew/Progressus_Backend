@@ -58,10 +58,10 @@ public class TeacherClassService {
 
   //TODO: Cleanup this mess, i made this code at 3am, but it works haha
   @Transactional
-  public TeacherClassResponse editTeacherClass(EditTeacherClassDto dto) {
+  public TeacherClassResponse editTeacherClass(Long teacherClassId, EditTeacherClassDto dto) {
     User user = userUtils.currentUser();
     TeacherClass teacherClass = teacherClassRepository
-        .findTeacherClassByIdAndTeacher_User_Id(dto.getTeacherClassId(), user.getId())
+        .findTeacherClassByIdAndTeacher_User_Id(teacherClassId, user.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Class not found"));
     if (dto.getTitle() != null) {
       teacherClass.setTitle(dto.getTitle());
@@ -115,7 +115,8 @@ public class TeacherClassService {
 
   public void deleteTeacherClass(Long teacherClassId){
     User user = userUtils.currentUser();
-    TeacherClass teacherClass = teacherClassRepository.findTeacherClassByIdAndTeacher_User_Id(teacherClassId,user.getId()).orElseThrow();
+    TeacherClass teacherClass = teacherClassRepository.findTeacherClassByIdAndTeacher_User_Id(teacherClassId,user.getId())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Class not found"));
     teacherClassRepository.delete(teacherClass);
   }
 

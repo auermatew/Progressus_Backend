@@ -1,11 +1,15 @@
 package hu.progressus.service;
 
 import hu.progressus.dto.EditUserDto;
+import hu.progressus.entity.Teacher;
 import hu.progressus.entity.User;
 import hu.progressus.repository.UserRepository;
 import hu.progressus.response.AuthResponse;
+import hu.progressus.response.UserResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,15 @@ public class UserService{
     if (userRepository.existsUserByPhoneNumber(phone)){
       throw new ResponseStatusException(HttpStatus.CONFLICT,"phone number already in use");
     }
+  }
+
+  public UserResponse getUserById(Long userId){
+    return UserResponse.ofLite(userRepository.findById(userId).orElseThrow());
+  }
+
+
+  public Page<User> getAllUsers(Pageable pageable){
+    return userRepository.findAllByOrderByIdAsc(pageable);
   }
 
   public AuthResponse editUser(EditUserDto dto){
