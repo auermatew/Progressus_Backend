@@ -120,7 +120,14 @@ public class TeacherClassService {
     teacherClassRepository.delete(teacherClass);
   }
 
-  public List<TeacherClassResponse> getClassesOfTeacher(Long teacherId){
+  public List<TeacherClassResponse> getTeacherClassesOfTeacher(Long teacherId){
     return teacherClassRepository.findAllByTeacher_Id(teacherId).stream().map(TeacherClassResponse::of).toList();
+  }
+
+  public TeacherClassResponse getTeacherClassById(Long teacherClassId){
+    User user = userUtils.currentUser();
+    TeacherClass teacherClass = teacherClassRepository.findTeacherClassByIdAndTeacher_User_Id(teacherClassId,user.getId())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Class not found"));
+    return TeacherClassResponse.of(teacherClass);
   }
 }

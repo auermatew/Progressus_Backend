@@ -40,8 +40,13 @@ public class TeacherClassController {
   }
 
   @GetMapping("/teacher/{teacherId}")
-  public ResponseEntity<List<TeacherClassResponse>> getClassesOfTeacher(@PathVariable Long teacherId){
-    return ResponseEntity.ok(teacherClassService.getClassesOfTeacher(teacherId));
+  public ResponseEntity<List<TeacherClassResponse>> getTeacherClassesOfTeacher(@PathVariable Long teacherId){
+    return ResponseEntity.ok(teacherClassService.getTeacherClassesOfTeacher(teacherId));
+  }
+
+  @GetMapping("/teacher/specific-class/{teacherClassId}")
+  public ResponseEntity<TeacherClassResponse> getTeacherClassById(@PathVariable Long teacherClassId){
+    return ResponseEntity.ok(teacherClassService.getTeacherClassById(teacherClassId));
   }
 
 }
