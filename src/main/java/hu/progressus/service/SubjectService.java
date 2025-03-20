@@ -1,9 +1,9 @@
 package hu.progressus.service;
 
+import hu.progressus.dto.CreateSubjectsDto;
 import hu.progressus.dto.EditSubjectDto;
 import hu.progressus.entity.Subject;
 import hu.progressus.repository.SubjectRepository;
-import hu.progressus.repository.TeacherClassSubjectRepository;
 import hu.progressus.response.SubjectResponse;
 import hu.progressus.util.StringFormatter;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubjectService {
   private final SubjectRepository subjectRepository;
-  private final TeacherClassSubjectRepository teacherClassSubjectRepository;
 
   public void ThrowSubjectExists(String subject){
     if (subjectRepository.existsBySubject(subject)){
@@ -29,21 +28,39 @@ public class SubjectService {
     }
   }
 
-
-  public Subject findOrCreateSubjectByName(String subjectName){
-    Optional<Subject> existingSubject = subjectRepository.findMatch(StringFormatter.formatString(subjectName));
-    if(existingSubject.isPresent()){
-      return existingSubject.get();
-    }
+  private Subject createSubject(String subjectName, boolean isVerified) {
+    String formattedName = StringFormatter.formatString(subjectName);
     var newSubject = Subject.builder()
-        .subject(StringFormatter.formatString(subjectName))
-        .isVerified(false)
+        .subject(formattedName)
+        .isVerified(isVerified)
         .build();
     return subjectRepository.save(newSubject);
   }
 
+  public Subject findOrCreateSubjectByName(String subjectName){
+    String formattedName = StringFormatter.formatString(subjectName);
+    Optional<Subject> existingSubject = subjectRepository.findMatch(formattedName);
+    return existingSubject.orElseGet(() -> createSubject(subjectName, false));
+  }
   public List<Subject> findOrCreateSubjects(List<String> subjects){
-    return subjects.stream().map(this::findOrCreateSubjectByName).toList();
+    return subjects.stream()
+        .map(this::findOrCreateSubjectByName)
+        .toList();
+  }
+
+  public Subject createVerifiedSubject(String subjectName) {
+    String formattedName = StringFormatter.formatString(subjectName);
+    Optional<Subject> existingSubject = subjectRepository.findMatch(formattedName);
+    if (existingSubject.isPresent()) {
+      ThrowSubjectExists(formattedName);
+    }
+    return createSubject(subjectName, true);
+  }
+  public List<SubjectResponse> createSubjectsForAdmin(CreateSubjectsDto dto) {
+    return dto.getSubjectNames().stream()
+        .map(this::createVerifiedSubject)
+        .map(SubjectResponse::of)
+        .toList();
   }
 
   public Page<SubjectResponse> getAllSubjects(Pageable pageable) {

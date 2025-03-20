@@ -5,6 +5,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AddSubjectsDto {
+public class CreateSubjectsDto {
   private List<String> subjectNames;
 }
