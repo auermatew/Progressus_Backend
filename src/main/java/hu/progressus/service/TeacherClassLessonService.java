@@ -70,7 +70,6 @@ public class TeacherClassLessonService {
     lessonReservationRepository.save(reservation);
   }
 
-  //TODO: Implement unit test
   @Transactional
   public void handleReservationStatus(Long id, boolean isApproved){
     User user = userUtils.currentUser();
@@ -81,6 +80,9 @@ public class TeacherClassLessonService {
     }
     if (LessonUtils.isLessonReserved(reservation.getTeacherClassLesson())) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Lesson is already reserved.");
+    }
+    if (reservation.getStatus() != LessonReservationStatus.PENDING){
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Reservation is already handled.");
     }
     if (isApproved){
       reservation.setStatus(LessonReservationStatus.APPROVED);
