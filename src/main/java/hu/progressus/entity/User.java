@@ -76,7 +76,10 @@ public class User implements UserDetails {
   private List<UserInterest> userInterests;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  private List<TeacherClassLesson> teacherClassLessons;
+  private List<LessonReservation> lessonReservations;
+
+  /*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<TeacherClassLesson> teacherClassLessons; */
 
   @PrePersist
   private void onCreate(){
@@ -86,9 +89,9 @@ public class User implements UserDetails {
     if (this.userInterests == null){
       this.userInterests = new ArrayList<>();
     }
-    if (this.teacherClassLessons == null){
+    /*if (this.teacherClassLessons == null){
       this.teacherClassLessons = new ArrayList<>();
-    }
+    }*/
     if(this.profilePicture == null){
       this.profilePicture = "defaultPfp.png";
     }

@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -40,9 +42,9 @@ public class TeacherClassLesson {
   @NotNull
   private LocalDateTime end_date;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  private User user;
+  /*@ManyToOne(fetch = FetchType.LAZY)
+  private User user;*/
 
-  @OneToOne(mappedBy = "teacherClassLesson", cascade = CascadeType.ALL)
-  private Transaction transaction;
+  @OneToMany(mappedBy = "teacherClassLesson", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<LessonReservation> lessonReservations;
 }

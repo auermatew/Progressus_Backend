@@ -125,8 +125,8 @@ public class TeacherClassService {
   }
 
   public TeacherClassResponse getTeacherClassById(Long teacherClassId){
-    User user = userUtils.currentUser();
-    TeacherClass teacherClass = teacherClassRepository.findTeacherClassByIdAndTeacher_User_Id(teacherClassId,user.getId())
+
+    TeacherClass teacherClass = teacherClassRepository.findById(teacherClassId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Class not found"));
     return TeacherClassResponse.of(teacherClass);
   }
