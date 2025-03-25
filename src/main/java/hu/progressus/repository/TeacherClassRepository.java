@@ -13,4 +13,6 @@ public interface TeacherClassRepository extends JpaRepository<TeacherClass,Long>
   Optional<TeacherClass> findTeacherClassByIdAndTeacher_User_Id(Long id, Long teacherUserId);
 
   List<TeacherClass> findAllByTeacher_Id(Long teacherId);
+
+  boolean existsByTeacherId(Long teacherId);
 }

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -94,12 +95,30 @@ public class TeacherClassLessonService {
       lessonReservationRepository.save(reservation);
     }
   }
-
-
-// TODO: Implement method to get all lessons for one teacher
-// TODO: Implement method to get lessons for one teacher by date
-// TODO: Implement method to get a specific lesson for one teacher
+// TODO: Implement method to get lessons for one teacher by date interval
 // TODO: Implement method to get all lessons for one teacher by classes
 // TODO: Implement method to delete a lesson
+
+  public List<TeacherClassLessonResponse> getAllLessonsForTeacher(Long teacherId){
+    if (!teacherClassRepository.existsByTeacherId(teacherId)) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Teacher not found.");
+    }
+    List<TeacherClassLesson> lessons = teacherClassLessonRepository.findAllByTeacherClass_Teacher_Id(teacherId);
+    return lessons.stream()
+        .map(TeacherClassLessonResponse::of)
+        .toList();
+  }
+
+  public TeacherClassLessonResponse getSpecificLessonForTeacher(Long teacherId, Long lessonId){
+    if (!teacherClassRepository.existsByTeacherId(teacherId)) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Teacher not found.");
+    }
+    TeacherClassLesson lesson = teacherClassLessonRepository
+        .findByTeacherClass_Teacher_IdAndId(teacherId, lessonId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found for this teacher."));
+
+    return TeacherClassLessonResponse.of(lesson);
+  }
+
 
 }

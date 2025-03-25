@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -47,4 +49,11 @@ public class TeacherClassLesson {
 
   @OneToMany(mappedBy = "teacherClassLesson", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<LessonReservation> lessonReservations;
+
+  @PrePersist
+  private void onCreate(){
+    if(this.lessonReservations == null){
+      this.lessonReservations = new ArrayList<>();
+    }
+  }
 }

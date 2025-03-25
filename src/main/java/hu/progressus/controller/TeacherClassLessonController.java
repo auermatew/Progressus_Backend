@@ -5,11 +5,14 @@ import hu.progressus.response.TeacherClassLessonResponse;
 import hu.progressus.service.TeacherClassLessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/teacher-class-lessons")
@@ -25,5 +28,15 @@ public class TeacherClassLessonController {
   @PostMapping("/reserve/{lessonId}")
   public void reserveLesson(@PathVariable Long lessonId){
     teacherClassLessonService.reserveLesson(lessonId);
+  }
+
+  @GetMapping("/teacher/{teacherId}")
+  public ResponseEntity<List<TeacherClassLessonResponse>> getAllLessonsForTeacher(@PathVariable Long teacherId){
+    return ResponseEntity.ok(teacherClassLessonService.getAllLessonsForTeacher(teacherId));
+  }
+
+  @GetMapping("/teacher/{teacherId}/lesson/{lessonId}")
+  public ResponseEntity<TeacherClassLessonResponse> getSpecificLessonForTeacher(@PathVariable Long teacherId, @PathVariable Long lessonId){
+    return ResponseEntity.ok(teacherClassLessonService.getSpecificLessonForTeacher(teacherId, lessonId));
   }
 }

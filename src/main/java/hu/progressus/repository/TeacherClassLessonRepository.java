@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +20,10 @@ public interface TeacherClassLessonRepository extends JpaRepository<TeacherClass
       "    (tcl.start_date < :endDate AND tcl.end_date > :startDate) " +
       ")")
   public Optional<TeacherClassLesson> findExistingLessonBetweenDates(@Param("teacherId") Long teacherId ,@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+  List<TeacherClassLesson> findAllByTeacherClass_Teacher_Id(Long teacherId);
+
+  Optional<TeacherClassLesson> findByTeacherClass_IdAndId(Long teacherClassId, Long lessonId);
+
+  Optional<TeacherClassLesson> findByTeacherClass_Teacher_IdAndId(Long teacherClassTeacherId, Long id);
 }

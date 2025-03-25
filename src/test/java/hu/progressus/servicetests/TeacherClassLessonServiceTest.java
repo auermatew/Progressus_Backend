@@ -85,9 +85,8 @@ public class TeacherClassLessonServiceTest {
     lenient().when(userUtils.currentUser()).thenReturn(user);
     lenient().when(lessonReservationRepository.findById(1L)).thenReturn(Optional.empty());
 
-    var result = assertThrows(ResponseStatusException.class, () -> {
-      teacherClassLessonService.handleReservationStatus(1L,true);
-    });
+    var result = assertThrows(ResponseStatusException.class, () ->
+      teacherClassLessonService.handleReservationStatus(1L,true));
 
     assertEquals(HttpStatus.NOT_FOUND,result.getStatusCode());
   }
@@ -99,9 +98,8 @@ public class TeacherClassLessonServiceTest {
     lenient().when(userUtils.currentUser()).thenReturn(user);
 
 
-    var result = assertThrows(ResponseStatusException.class, ()-> {
-      teacherClassLessonService.handleReservationStatus(1L, true);
-    });
+    var result = assertThrows(ResponseStatusException.class, ()->
+      teacherClassLessonService.handleReservationStatus(1L, true));
     assertEquals(HttpStatus.CONFLICT,result.getStatusCode());
   }
 

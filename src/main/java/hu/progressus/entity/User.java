@@ -92,6 +92,9 @@ public class User implements UserDetails {
     /*if (this.teacherClassLessons == null){
       this.teacherClassLessons = new ArrayList<>();
     }*/
+    if(this.lessonReservations == null){
+      this.lessonReservations = new ArrayList<>();
+    }
     if(this.profilePicture == null){
       this.profilePicture = "defaultPfp.png";
     }
