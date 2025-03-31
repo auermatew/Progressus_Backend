@@ -29,14 +29,8 @@ public class Transaction {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @NotNull
+  //@NotNull
   private BillingDetails billingDetails;
-
-  @NotNull
-  private Integer balance_before;
-
-  @NotNull
-  private Integer balance_after;
 
   @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
   @NotNull

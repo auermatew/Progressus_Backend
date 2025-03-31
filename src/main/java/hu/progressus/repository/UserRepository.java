@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -21,4 +24,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
   Page<User> findAllByOrderByIdAsc(Pageable pageable);
 
   boolean existsUserByPhoneNumber(String phone);
+
+  @Modifying
+  @Query("UPDATE User u SET u.balance = u.balance - :amount WHERE u.id = :fromUserId AND u.balance >= :amount")
+  int deductBalance(@Param("fromUserId") Long fromUserId, @Param("amount") int amount);
+
+  @Modifying
+  @Query("UPDATE User u SET u.balance = u.balance + :amount WHERE u.id = :toUserId")
+  int creditBalance(@Param("toUserId") Long toUserId, @Param("amount") int amount);
 }

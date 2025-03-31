@@ -39,4 +39,9 @@ public class TeacherClassLessonController {
   public ResponseEntity<TeacherClassLessonResponse> getSpecificLessonForTeacher(@PathVariable Long teacherId, @PathVariable Long lessonId){
     return ResponseEntity.ok(teacherClassLessonService.getSpecificLessonForTeacher(teacherId, lessonId));
   }
+
+  @PostMapping("/reservation/{id}/{accepted}")
+  public void handleReservation(@PathVariable Long id, @PathVariable boolean accepted){
+    teacherClassLessonService.handleReservationStatus(id,accepted);
+  }
 }
