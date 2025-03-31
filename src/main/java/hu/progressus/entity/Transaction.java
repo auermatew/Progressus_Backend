@@ -41,4 +41,7 @@ public class Transaction {
   @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
   @NotNull
   private LocalDateTime date;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private LessonReservation lessonReservation;
 }
