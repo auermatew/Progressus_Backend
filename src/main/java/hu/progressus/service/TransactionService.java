@@ -37,6 +37,10 @@ public class TransactionService {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Reservation is not approved");
     }
 
+    if (reservation.getTransaction() != null) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Transaction already exists");
+    }
+
     User currentUser = userUtils.currentUser();
     User student = reservation.getUser();
     TeacherClassLesson lesson = reservation.getTeacherClassLesson();
@@ -45,6 +49,10 @@ public class TransactionService {
     Integer priceOfLesson = teacherClass.getPrice();
 
     if(!currentUser.getId().equals(student.getId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not your reservation");
+
+    if(currentUser.getBillingDetails() == null){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Billing details needed for transaction");
+    }
 
     processTransfer(student,teacher,priceOfLesson);
     Transaction saveTransaction = saveTransaction(student,reservation);

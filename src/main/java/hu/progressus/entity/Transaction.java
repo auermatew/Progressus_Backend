@@ -29,13 +29,13 @@ public class Transaction {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  //@NotNull
+  @NotNull
   private BillingDetails billingDetails;
 
   @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
   @NotNull
   private LocalDateTime date;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @OneToOne
   private LessonReservation lessonReservation;
 }

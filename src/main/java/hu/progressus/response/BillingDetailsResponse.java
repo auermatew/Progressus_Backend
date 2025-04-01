@@ -1,7 +1,6 @@
 package hu.progressus.response;
 
 import hu.progressus.entity.BillingDetails;
-import hu.progressus.entity.User;
 import lombok.Data;
 
 @Data
