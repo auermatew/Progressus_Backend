@@ -3,6 +3,7 @@ package hu.progressus.controller;
 import hu.progressus.dto.CreateTeacherClassLessonDto;
 import hu.progressus.response.TeacherClassLessonResponse;
 import hu.progressus.service.TeacherClassLessonService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,7 @@ public class TeacherClassLessonController {
   private final TeacherClassLessonService teacherClassLessonService;
 
   @PostMapping("/create")
-  public ResponseEntity<TeacherClassLessonResponse> createLesson(@RequestBody CreateTeacherClassLessonDto dto){
+  public ResponseEntity<TeacherClassLessonResponse> createLesson(@Valid @RequestBody CreateTeacherClassLessonDto dto){
     return ResponseEntity.ok(teacherClassLessonService.createTeacherClassLesson(dto));
   }
 

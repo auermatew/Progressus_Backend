@@ -8,7 +8,7 @@ public class BillingDetailsResponse {
 
   private Long id;
 
-  private UserResponse user;
+  //private UserResponse user;
 
   private String address_city;
 
@@ -20,7 +20,7 @@ public class BillingDetailsResponse {
 
   protected BillingDetailsResponse(BillingDetails billingDetails) {
     this.id = billingDetails.getId();
-    this.user = UserResponse.of(billingDetails.getUser());
+    //this.user = UserResponse.of(billingDetails.getUser());
     this.address_city = billingDetails.getAddress_city();
     this.address_zip = billingDetails.getAddress_zip();
     this.address_street = billingDetails.getAddress_street();

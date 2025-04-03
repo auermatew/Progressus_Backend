@@ -4,6 +4,7 @@ import hu.progressus.dto.CreateSubjectsDto;
 import hu.progressus.dto.EditSubjectDto;
 import hu.progressus.response.SubjectResponse;
 import hu.progressus.service.SubjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +49,7 @@ public class SubjectController {
 
   //@PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/create")
-  public ResponseEntity<List<SubjectResponse>> createSubjects(@RequestBody CreateSubjectsDto dto) {
+  public ResponseEntity<List<SubjectResponse>> createSubjects(@Valid @RequestBody CreateSubjectsDto dto) {
     List<SubjectResponse> response = subjectService.createSubjectsForAdmin(dto);
     return ResponseEntity.ok(response);
   }

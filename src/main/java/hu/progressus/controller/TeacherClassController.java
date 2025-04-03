@@ -4,6 +4,7 @@ import hu.progressus.dto.CreateTeacherClassDto;
 import hu.progressus.dto.EditTeacherClassDto;
 import hu.progressus.response.TeacherClassResponse;
 import hu.progressus.service.TeacherClassService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +25,7 @@ public class TeacherClassController {
   private final TeacherClassService teacherClassService;
 
   @PostMapping("/create")
-  public ResponseEntity<TeacherClassResponse> createTeacherClass(@RequestBody CreateTeacherClassDto dto){
+  public ResponseEntity<TeacherClassResponse> createTeacherClass(@Valid @RequestBody CreateTeacherClassDto dto){
     return ResponseEntity.ok(teacherClassService.createTeacherClass(dto));
   }
 

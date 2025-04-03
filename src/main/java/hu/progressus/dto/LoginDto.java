@@ -1,16 +1,16 @@
 package hu.progressus.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
 public class LoginDto {
 
   @Email
-  @NotNull
+  @NotBlank
   private String email;
 
-  @NotNull
+  @NotBlank
   private String password;
 }

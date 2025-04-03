@@ -28,7 +28,7 @@ public class SubjectService {
     }
   }
 
-  private Subject createSubject(String subjectName, boolean isVerified) {
+  public Subject createSubject(String subjectName, boolean isVerified) {
     String formattedName = StringFormatter.formatString(subjectName);
     var newSubject = Subject.builder()
         .subject(formattedName)
