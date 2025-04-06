@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -41,13 +42,13 @@ public class SubjectController {
 
 
   @PatchMapping("/edit/{subjectId}")
-  //@PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<SubjectResponse> editSubject(@PathVariable Long subjectId, @RequestBody EditSubjectDto dto) {
     SubjectResponse response = subjectService.editSubject(subjectId, dto);
     return ResponseEntity.ok(response);
   }
 
-  //@PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN')")
   @PostMapping("/create")
   public ResponseEntity<List<SubjectResponse>> createSubjects(@Valid @RequestBody CreateSubjectsDto dto) {
     List<SubjectResponse> response = subjectService.createSubjectsForAdmin(dto);
@@ -55,7 +56,7 @@ public class SubjectController {
   }
 
   @DeleteMapping("/delete/{subjectId}")
-  //@PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN')")
   public void deleteSubject(@PathVariable Long subjectId) {
     subjectService.deleteSubject(subjectId);
   }

@@ -6,6 +6,7 @@ import hu.progressus.service.TeacherClassLessonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,11 +22,13 @@ import java.util.List;
 public class TeacherClassLessonController {
   private final TeacherClassLessonService teacherClassLessonService;
 
+  @PreAuthorize("hasRole('TEACHER')")
   @PostMapping("/create")
   public ResponseEntity<TeacherClassLessonResponse> createLesson(@Valid @RequestBody CreateTeacherClassLessonDto dto){
     return ResponseEntity.ok(teacherClassLessonService.createTeacherClassLesson(dto));
   }
 
+  @PreAuthorize("hasRole('STUDENT')")
   @PostMapping("/reserve/{lessonId}")
   public void reserveLesson(@PathVariable Long lessonId){
     teacherClassLessonService.reserveLesson(lessonId);
@@ -41,6 +44,7 @@ public class TeacherClassLessonController {
     return ResponseEntity.ok(teacherClassLessonService.getSpecificLessonForTeacher(teacherId, lessonId));
   }
 
+  @PreAuthorize("hasRole('TEACHER')")
   @PostMapping("/reservation/{id}/{accepted}")
   public void handleReservation(@PathVariable Long id, @PathVariable boolean accepted){
     teacherClassLessonService.handleReservationStatus(id,accepted);
