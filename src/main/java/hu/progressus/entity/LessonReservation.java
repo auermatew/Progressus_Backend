@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -16,14 +17,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "lesson_reservation")
+@Table(name = "lesson_reservation",
+    indexes = {
+        @Index(name = "idx_lesson_reservation_teacher_class_lesson_id", columnList = "teacher_class_lesson_id"),
+        @Index(name = "idx_lesson_reservation_user_id", columnList = "user_id"),
+    })
 public class LessonReservation {
   @GeneratedValue
   @Id

@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -24,7 +25,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "teacher_classes")
+@Table(name = "teacher_classes",
+    indexes = {
+        @Index(name = "idx_teacher_class_teacher_id", columnList = "teacher_id"),
+    })
 public class TeacherClass {
   @Id
   @GeneratedValue

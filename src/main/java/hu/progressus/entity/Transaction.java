@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -22,7 +23,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "transactions")
+@Table(name = "transactions",
+    indexes = {
+        @Index(name = "idx_transaction_billing_details_id", columnList = "billing_details_id"),
+    })
 public class Transaction {
   @Id
   @GeneratedValue

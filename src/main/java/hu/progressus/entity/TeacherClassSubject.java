@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -17,7 +18,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "teacher_class_subjects",uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_class_id","subject_id"})})
+@Table(name = "teacher_class_subjects",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_class_id","subject_id"})},
+indexes = {
+        @Index(name = "idx_teacher_class_subject_teacher_class_id", columnList = "teacher_class_id"),
+        @Index(name = "idx_teacher_class_subject_subject_id", columnList = "subject_id"),
+    })
 public class TeacherClassSubject {
   @Id
   @GeneratedValue
