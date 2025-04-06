@@ -12,6 +12,8 @@ import hu.progressus.repository.UserRepository;
 import hu.progressus.response.TransactionResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,4 +80,15 @@ public class TransactionService {
         .build();
     return transactionRepository.save(transaction);
   }
+
+  public Page<Transaction> getIncomingTransactions(Pageable pageable){
+    User user = userUtils.currentUser();
+    return transactionRepository.findAllByLessonReservation_TeacherClassLesson_TeacherClass_Teacher_User_IdOrderByDateDesc(user.getId(), pageable);
+  }
+
+  public Page<Transaction> getOutgoingTransactions(Pageable pageable){
+    User user = userUtils.currentUser();
+    return transactionRepository.findAllByBillingDetails_User_IdOrderByDateDesc(user.getId(), pageable);
+  }
+
 }
