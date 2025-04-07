@@ -5,7 +5,7 @@
 
 > [JDK 17](https://bell-sw.com/pages/downloads/#jdk-17-lts) szükséges a futtatáshoz.
 
-> PostgreSQL adatbázisunkhoz [Docker](https://www.docker.com/products/docker-desktop/) használtunk.<br/> Ennek pontos beállításához alább található [Docker konfiguráció](#docker-konfiguráció).
+> PostgreSQL adatbázisunkhoz [Docker](https://www.docker.com/products/docker-desktop/) használtunk.<br/> Ennek pontos beállításához alább található [Adatbázis konfiguráció](#adatbázis-konfiguráció).
 
 ### Futattás
 1. Projekt cloneozása:
@@ -20,8 +20,23 @@
 
 
 
-### Docker konfiguráció
-> A Docker telepítése után a következő parancsokkal tudod elindítani a PostgreSQL adatbázist:
+### Adatbázis konfiguráció
+> A Docker telepítése után futtatni kell a root mappában található **docker-compose.yml** fájlt a következő paranccsal:<br/>
+`docker-compose up -d`
+
+> *IntelliJ*</br>
+> Datasource config:
+> 1. `View > Tool Windows > Database` 
+> 2. `+ ikon > Data Source > PostgreSQL`
+> 3. `Host: localhost`
+> 4. `Port: 5432`
+> 5. `Username: username`
+> 6. `Password: password`
+> 7. `Apply > OK`
+> 
+> Adatbázis létrehozása
+> 1. `+ ikon > Query Console`
+> 2. `CREATE DATABASE progressus_database;`
 
 ---
 ## Fejlesztési terv 👽
