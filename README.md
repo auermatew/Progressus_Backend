@@ -21,11 +21,11 @@
 
 
 ### Adatbázis konfiguráció
-> A Docker telepítése után futtatni kell a root mappában található **docker-compose.yml** fájlt a következő paranccsal:<br/>
+> (A Docker telepítése után) futtatni kell a backend project root mappájában található **docker-compose.yml** fájlt a következő paranccsal:<br/>
 `docker-compose up -d`
 
-> *IntelliJ*</br>
-> Datasource config:
+**(Opcionális)**
+**Ha látni szeretné az adatbázist IntelliJ-ben:** </br>
 > 1. `View > Tool Windows > Database` 
 > 2. `+ ikon > Data Source > PostgreSQL`
 > 3. `Host: localhost`
@@ -33,10 +33,7 @@
 > 5. `Username: username`
 > 6. `Password: password`
 > 7. `Apply > OK`
-> 
-> Adatbázis létrehozása
-> 1. `+ ikon > Query Console`
-> 2. `CREATE DATABASE progressus_database;`
+
 
 ---
 ## Fejlesztési terv 👽
