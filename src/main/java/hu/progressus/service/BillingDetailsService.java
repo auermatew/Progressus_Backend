@@ -53,9 +53,25 @@ public class BillingDetailsService {
     return BillingDetailsResponse.of(billingDetails);
   }
 
-  //TODO: implement edit, delete
   public BillingDetailsResponse editBillingDetails(EditBillingDetailsDto dto){
     User user  = userUtils.currentUser();
-    return null;
+    BillingDetails billingDetails = billingDetailsRepository.findByUserId(user.getId())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Billing details not found"));
+
+    if (dto.getAddress_city() != null) {
+      billingDetails.setAddress_city(dto.getAddress_city());
+    }
+    if (dto.getAddress_zip() != null) {
+      billingDetails.setAddress_zip(dto.getAddress_zip());
+    }
+    if (dto.getAddress_street() != null) {
+      billingDetails.setAddress_street(dto.getAddress_street());
+    }
+    if (dto.getAddress_country() != null) {
+      billingDetails.setAddress_country(dto.getAddress_country());
+    }
+
+    billingDetails = billingDetailsRepository.save(billingDetails);
+    return BillingDetailsResponse.of(billingDetails);
   }
 }

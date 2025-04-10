@@ -22,10 +22,10 @@
 
 ### Adatbázis konfiguráció
 > (A Docker telepítése után) futtatni kell a backend project root mappájában található **docker-compose.yml** fájlt a következő paranccsal:<br/>
-`docker-compose up -d`
+`docker compose up -d`
 
 **(Opcionális)**
-**Ha látni szeretné az adatbázist IntelliJ-ben:** </br>
+**Adatbázis megjelenítése IntelliJ-ben:** </br>
 > 1. `View > Tool Windows > Database` 
 > 2. `+ ikon > Data Source > PostgreSQL`
 > 3. `Host: localhost`

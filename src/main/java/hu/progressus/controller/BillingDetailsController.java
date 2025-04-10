@@ -1,6 +1,7 @@
 package hu.progressus.controller;
 
 import hu.progressus.dto.CreateBillingDetailsDto;
+import hu.progressus.dto.EditBillingDetailsDto;
 import hu.progressus.response.BillingDetailsResponse;
 import hu.progressus.service.BillingDetailsService;
 import jakarta.validation.Valid;
@@ -34,5 +35,10 @@ public class BillingDetailsController {
   @GetMapping("/{userId}")
   public ResponseEntity<BillingDetailsResponse> getBillingDetailsByUserId(@PathVariable Long userId) {
     return ResponseEntity.ok(billingDetailsService.getBillingDetailsByUserId(userId));
+  }
+
+  @PostMapping("/edit")
+  public ResponseEntity<BillingDetailsResponse> editBillingDetails(@Valid @RequestBody EditBillingDetailsDto dto) {
+    return ResponseEntity.ok(billingDetailsService.editBillingDetails(dto));
   }
 }
