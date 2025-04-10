@@ -19,7 +19,6 @@ public class TransactionResponse {
 
   protected  TransactionResponse(Transaction transaction){
     this.id = transaction.getId();
-    //TODO: implement billing details CRUD
     this.billingDetails = BillingDetailsResponse.of(transaction.getBillingDetails());
     this.date = transaction.getDate();
     this.lesson = TeacherClassLessonResponse.of(transaction.getLessonReservation().getTeacherClassLesson());
