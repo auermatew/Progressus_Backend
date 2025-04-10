@@ -16,8 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageController {
   private final ImageService imageService;
 
-  @PostMapping("/upload")
+  @PostMapping("/uploadProfilePicture")
   public ResponseEntity<ImageResponse> uploadImage(@RequestParam("file")MultipartFile file) {
-    return ResponseEntity.ok(imageService.uploadImage(file));
+    return ResponseEntity.ok(imageService.uploadProfilePicture(file));
   }
 }

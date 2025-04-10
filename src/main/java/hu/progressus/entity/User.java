@@ -55,6 +55,9 @@ public class User implements UserDetails {
 
   private String profilePicture;
 
+  @OneToOne
+  private Image profileImg;
+
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   @NotNull
   private LocalDate dateOfBirth;

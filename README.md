@@ -51,7 +51,7 @@
 #### 6. Egyéb funkciók
    - tantárgyak ✅
    - user interests ⏳
-   - képek AWS-sel ⏳
+   - képek AWS-sel ✅
 #### 7. Extra funkciók
    - basic admin features ✅
    - featured tanárok ⏳

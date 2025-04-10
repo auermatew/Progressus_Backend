@@ -22,7 +22,9 @@ public class UserResponse {
     this.fullName = user.getFullName();
     this.phoneNumber = user.getPhoneNumber();
     this.description = user.getDescription();
-    this.profilePicture = user.getProfilePicture();
+    if (user.getProfileImg() != null) {
+      this.profilePicture = user.getProfileImg().getUrl();
+    }
   }
 
   public static UserResponse of(User user){

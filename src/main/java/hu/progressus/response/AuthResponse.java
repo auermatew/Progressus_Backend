@@ -34,7 +34,9 @@ public class AuthResponse {
     this.id = user.getId();
     this.fullName = user.getFullName();
     this.email = user.getEmail();
-    this.profilePicture = user.getProfilePicture();
+    if (user.getProfileImg() != null) {
+    this.profilePicture = user.getProfileImg().getUrl();
+    }
     this.dateOfBirth = user.getDateOfBirth();
     this.phoneNumber = user.getPhoneNumber();
     this.description = user.getDescription();
