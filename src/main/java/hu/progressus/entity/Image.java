@@ -26,4 +26,5 @@ public class Image {
  @ManyToOne
  private User user;
 
+ private String key;
 }

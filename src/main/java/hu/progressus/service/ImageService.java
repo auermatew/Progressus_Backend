@@ -30,19 +30,47 @@ public class ImageService {
 
 @Transactional
   public ImageResponse uploadProfilePicture (MultipartFile multipartFile){
+  User user = userUtils.currentUser();
+  if (user.getProfileImg() != null){
+    deleteImage(user);
+  }
     Image image = uploadImage(multipartFile);
-    int rowsUpdated = userRepository.updateProfilePicture(image.getUser().getId(),image.getId());
+    int rowsUpdated = userRepository.updateProfilePicture(user.getId(),image.getId());
     if (rowsUpdated != 0) {
       return ImageResponse.of(image);
     } else {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "error setting profile picture");
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error setting profile picture.");
+    }
+  }
+
+  @Transactional
+  public void removeProfilePicture (){
+  User user = userUtils.currentUser();
+
+  if (user.getProfileImg() == null){
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has no profile picture.");
+  }
+  deleteImage(user);
+  }
+
+  private void deleteImage(User user){
+    Image image = user.getProfileImg();
+    try {
+      s3Service.deleteFile(user.getProfileImg().getKey());
+      user.setProfileImg(null);
+      userRepository.save(user);
+      userRepository.flush();
+      imageRepository.delete(image);
+    }
+    catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete profile picture.");
     }
 
   }
 
   private Image uploadImage(MultipartFile multipartFile) {
     if (!isValidImage(multipartFile)) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid image type");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid image type.");
     }
 
     try {
@@ -73,8 +101,11 @@ public class ImageService {
   private Image saveToDatabase(String filename){
     User user = userUtils.currentUser();
     var url = s3Service.generateImageUrl(filename);
-    Image image = Image.builder().url(url)
-        .user(user).build();
+    Image image = Image.builder()
+        .url(url)
+        .user(user)
+        .key(filename)
+        .build();
     return imageRepository.save(image);
   }
 }

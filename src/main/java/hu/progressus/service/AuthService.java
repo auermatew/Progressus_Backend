@@ -50,7 +50,6 @@ public class AuthService {
         .fullName(dto.getFullName())
         .email(dto.getEmail())
         .password(passwordEncoder.encode(dto.getPassword()))
-        .profilePicture(dto.getProfilePicture())
         .dateOfBirth(dto.getDateOfBirth())
         .phoneNumber(dto.getPhoneNumber())
         .description(dto.getDescription())

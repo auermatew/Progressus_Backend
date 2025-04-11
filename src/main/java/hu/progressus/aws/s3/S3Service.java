@@ -13,9 +13,6 @@ import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -63,7 +60,7 @@ public class S3Service {
       logUpload(fileName);
   }
 
-  public void deleteFile(String key) {
+  public void deleteFile(String key) throws Exception {
     DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
         .bucket(bucketName)
         .key(key)
@@ -73,25 +70,6 @@ public class S3Service {
     log.info("Deleted file from S3 with key: {}", key);
   }
 
-  public List<String> listFiles() {
-    ListObjectsV2Request listReq = ListObjectsV2Request.builder()
-        .bucket(bucketName)
-        .build();
-
-    ListObjectsV2Response listRes = s3Client.listObjectsV2(listReq);
-    return listRes.contents()
-        .stream()
-        .map(S3Object::key)
-        .collect(Collectors.toList());
-  }
-
-  public List<String> getAllImageUrls() {
-    List<String> fileKeys = listFiles();
-
-    return fileKeys.stream()
-        .map(this::generateImageUrl)
-        .collect(Collectors.toList());
-  }
 
   // Format: https://<bucket-name>.s3.<region>.amazonaws.com/<file-name>
   public String generateImageUrl(String fileName) {

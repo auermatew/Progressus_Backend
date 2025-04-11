@@ -53,8 +53,6 @@ public class User implements UserDetails {
   @NotNull
   private String password;
 
-  private String profilePicture;
-
   @OneToOne
   private Image profileImg;
 
@@ -101,9 +99,6 @@ public class User implements UserDetails {
     }*/
     if(this.lessonReservations == null){
       this.lessonReservations = new ArrayList<>();
-    }
-    if(this.profilePicture == null){
-      this.profilePicture = "defaultPfp.png";
     }
   }
 

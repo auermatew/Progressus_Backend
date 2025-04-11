@@ -48,9 +48,6 @@ public class UserService{
     if (dto.getFullName() != null) {
       user.setFullName(dto.getFullName());
     }
-    if (dto.getProfilePicture() != null) {
-      user.setProfilePicture(dto.getProfilePicture());
-    }
     if (dto.getPassword() != null) {
       user.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
