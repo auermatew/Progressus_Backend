@@ -26,4 +26,12 @@ public interface TeacherClassLessonRepository extends JpaRepository<TeacherClass
   Optional<TeacherClassLesson> findByTeacherClass_IdAndId(Long teacherClassId, Long lessonId);
 
   Optional<TeacherClassLesson> findByTeacherClass_Teacher_IdAndId(Long teacherClassTeacherId, Long id);
+
+  @Query("SELECT tcl " +
+      "FROM TeacherClassLesson tcl " +
+      "WHERE tcl.teacherClass.teacher.id = :teacherId " +
+      "  AND tcl.start_date BETWEEN :startDate AND :endDate")
+  List<TeacherClassLesson> findTeacherClassLessons(@Param("teacherId") Long teacherId,
+                                                   @Param("startDate") LocalDateTime startDate,
+                                                   @Param("endDate") LocalDateTime endDate);
 }

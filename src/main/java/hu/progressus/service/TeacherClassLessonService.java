@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,9 +96,16 @@ public class TeacherClassLessonService {
       lessonReservationRepository.save(reservation);
     }
   }
-// TODO: Implement method to get lessons for one teacher by date interval
+
 // TODO: Implement method to get all lessons for one teacher by classes
 // TODO: Implement method to delete a lesson
+
+  public List<TeacherClassLessonResponse> getAllLessonsForTeacherByDateInterval(Long teacherId, LocalDateTime startDate, LocalDateTime endDate){
+  List<TeacherClassLesson> lessons =teacherClassLessonRepository.findTeacherClassLessons(teacherId,startDate,endDate);
+  return lessons.stream()
+      .map(TeacherClassLessonResponse::of)
+      .toList();
+  }
 
   public List<TeacherClassLessonResponse> getAllLessonsForTeacher(Long teacherId){
     if (!teacherClassRepository.existsByTeacherId(teacherId)) {
