@@ -97,7 +97,6 @@ public class TeacherClassLessonService {
     }
   }
 
-// TODO: Implement method to get all lessons for one teacher by classes
 // TODO: Implement method to delete a lesson
 
   public List<TeacherClassLessonResponse> getAllLessonsForTeacherByDateInterval(Long teacherId, LocalDateTime startDate, LocalDateTime endDate){
@@ -106,6 +105,14 @@ public class TeacherClassLessonService {
       .map(TeacherClassLessonResponse::of)
       .toList();
   }
+
+  public List<TeacherClassLessonResponse> getAllLessonsForTeacherByClasses(Long teacherClassId){
+    List<TeacherClassLesson> lessons = teacherClassLessonRepository.findTeacherClassLessonsByTeacherClass_Id(teacherClassId);
+    return lessons.stream()
+        .map(TeacherClassLessonResponse::of)
+        .toList();
+  }
+
 
   public List<TeacherClassLessonResponse> getAllLessonsForTeacher(Long teacherId){
     if (!teacherClassRepository.existsByTeacherId(teacherId)) {

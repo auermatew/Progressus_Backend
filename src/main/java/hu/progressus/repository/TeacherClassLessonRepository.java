@@ -34,4 +34,6 @@ public interface TeacherClassLessonRepository extends JpaRepository<TeacherClass
   List<TeacherClassLesson> findTeacherClassLessons(@Param("teacherId") Long teacherId,
                                                    @Param("startDate") LocalDateTime startDate,
                                                    @Param("endDate") LocalDateTime endDate);
+
+  List<TeacherClassLesson> findTeacherClassLessonsByTeacherClass_Id(Long teacherClassId);
 }

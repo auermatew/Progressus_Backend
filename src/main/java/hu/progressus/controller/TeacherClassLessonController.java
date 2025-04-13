@@ -52,6 +52,11 @@ public class TeacherClassLessonController {
     teacherClassLessonService.handleReservationStatus(id,accepted);
   }
 
+  @GetMapping("/lessons-by/{teacherClassId}")
+  public ResponseEntity<List<TeacherClassLessonResponse>> getAllLessonsForTeacherByClasses(@PathVariable Long teacherClassId){
+    return ResponseEntity.ok(teacherClassLessonService.getAllLessonsForTeacherByClasses(teacherClassId));
+  }
+
   @GetMapping("/calendar")
   public ResponseEntity<List<TeacherClassLessonResponse>> getAllLessonsForTeacherByDateInterval(
       @RequestParam(name = "teacherId") Long teacherId,
