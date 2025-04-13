@@ -3,6 +3,7 @@ package hu.progressus.controller;
 import hu.progressus.dto.CreateTeacherClassLessonDto;
 import hu.progressus.response.TeacherClassLessonResponse;
 import hu.progressus.service.TeacherClassLessonService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,38 +28,45 @@ public class TeacherClassLessonController {
 
   @PreAuthorize("hasRole('TEACHER')")
   @PostMapping("/create")
+  @Operation(summary = "Create a lesson", description = "Create a lesson. The user must be a teacher to access this endpoint.")
   public ResponseEntity<TeacherClassLessonResponse> createLesson(@Valid @RequestBody CreateTeacherClassLessonDto dto){
     return ResponseEntity.ok(teacherClassLessonService.createTeacherClassLesson(dto));
   }
 
   @PreAuthorize("hasRole('STUDENT')")
   @PostMapping("/reserve/{lessonId}")
+  @Operation(summary = "Reserve a lesson", description = "Reserve a lesson. The user must be a student to access this endpoint.")
   public void reserveLesson(@PathVariable Long lessonId){
     teacherClassLessonService.reserveLesson(lessonId);
   }
 
   @GetMapping("/teacher/{teacherId}")
+  @Operation(summary = "Get all lessons of a teacher", description = "Get all lessons of a teacher.")
   public ResponseEntity<List<TeacherClassLessonResponse>> getAllLessonsForTeacher(@PathVariable Long teacherId){
     return ResponseEntity.ok(teacherClassLessonService.getAllLessonsForTeacher(teacherId));
   }
 
   @GetMapping("/teacher/{teacherId}/lesson/{lessonId}")
+  @Operation(summary = "Get a specific lesson of a teacher", description = "Get a specific lesson of a teacher by teacher ID and lesson ID.")
   public ResponseEntity<TeacherClassLessonResponse> getSpecificLessonForTeacher(@PathVariable Long teacherId, @PathVariable Long lessonId){
     return ResponseEntity.ok(teacherClassLessonService.getSpecificLessonForTeacher(teacherId, lessonId));
   }
 
   @PreAuthorize("hasRole('TEACHER')")
   @PostMapping("/reservation/{id}/{accepted}")
+  @Operation(summary = "Handle reservation status", description = "Handle reservation status. The user must be a teacher to access this endpoint.")
   public void handleReservation(@PathVariable Long id, @PathVariable boolean accepted){
     teacherClassLessonService.handleReservationStatus(id,accepted);
   }
 
   @GetMapping("/lessons-by/{teacherClassId}")
+  @Operation(summary = "Get all lessons of a teacher class", description = "Get all lessons of a teacher class by teacher class ID.")
   public ResponseEntity<List<TeacherClassLessonResponse>> getAllLessonsForTeacherByClasses(@PathVariable Long teacherClassId){
     return ResponseEntity.ok(teacherClassLessonService.getAllLessonsForTeacherByClasses(teacherClassId));
   }
 
   @GetMapping("/calendar")
+  @Operation(summary = "Get all lessons of a teacher by date interval", description = "Get all lessons of a teacher by date interval.")
   public ResponseEntity<List<TeacherClassLessonResponse>> getAllLessonsForTeacherByDateInterval(
       @RequestParam(name = "teacherId") Long teacherId,
       @RequestParam(name = "startDate") LocalDateTime startDate,
@@ -70,6 +78,7 @@ public class TeacherClassLessonController {
 
   @PreAuthorize("hasRole('TEACHER')")
   @DeleteMapping("/delete/{teacherClassLessonId}")
+  @Operation(summary = "Delete a lesson", description = "Delete a lesson. The user must be a teacher to access this endpoint.")
   public void deleteLesson(@PathVariable Long teacherClassLessonId){
     teacherClassLessonService.deleteLesson(teacherClassLessonId);
   }

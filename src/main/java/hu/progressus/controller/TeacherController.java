@@ -6,6 +6,7 @@ import hu.progressus.entity.Teacher;
 import hu.progressus.response.AuthResponse;
 import hu.progressus.response.TeacherResponse;
 import hu.progressus.service.TeacherService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,22 +31,26 @@ public class TeacherController {
 
   @PreAuthorize("hasRole('STUDENT')")
   @PostMapping("/teacher/registration")
+  @Operation(summary = "Register as a teacher", description = "Register as a teacher. The user must be a student to access this endpoint.")
   public ResponseEntity<AuthResponse> registerAsTeacher(@Valid @RequestBody CreateTeacherDto dto){
     return ResponseEntity.ok(teacherService.registerAsTeacher(dto));
   }
 
   @PreAuthorize("hasRole('TEACHER')")
   @DeleteMapping("/teacher/delete")
+  @Operation(summary = "Delete teacher", description = "Changes the TEACHER role to STUDENT. The user must be a teacher to access this endpoint.")
   public void deleteTeacher(){
     teacherService.deleteTeacher();
   }
 
   @GetMapping("/teacher/{teacherId}")
+  @Operation(summary = "Get teacher by ID", description = "Get a teacher by ID.")
   public ResponseEntity<TeacherResponse> getTeacherById(@PathVariable Long teacherId){
     return ResponseEntity.ok(TeacherResponse.of(teacherService.getTeacherById(teacherId)));
   }
 
   @GetMapping("/all")
+  @Operation(summary = "Get all teachers", description = "Get all teachers.")
   public ResponseEntity<Page<TeacherResponse>> getAllTeachers(@PageableDefault(size = 15)
       Pageable pageable){
     Page<Teacher> teacherPage = teacherService.getAllTeachers(pageable);
@@ -54,7 +59,9 @@ public class TeacherController {
     return ResponseEntity.ok(teacherResponses);
   }
 
+  @PreAuthorize("hasRole('TEACHER')")
   @PatchMapping("/teacher/edit")
+  @Operation(summary = "Edit teacher", description = "Edit teacher information. The user must be a teacher to access this endpoint.")
   public ResponseEntity<TeacherResponse> editTeacher(@RequestBody @Valid EditTeacherDto dto) {
     return ResponseEntity.ok(teacherService.editTeacher(dto));
   }

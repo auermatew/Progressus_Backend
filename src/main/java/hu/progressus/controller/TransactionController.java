@@ -29,6 +29,7 @@ public class TransactionController {
     return ResponseEntity.ok(transactionService.acceptLessonTransaction(transactionId));
   }
   //TODO: add swagger operations for each endpoint in each controller
+  @Operation(summary = "Get incoming transactions", description = "Get all incoming transactions (currently for teachers only)")
   @GetMapping("/incoming")
   public ResponseEntity<Page<TransactionResponse>> getIncomingTransactions(@PageableDefault (size = 15)Pageable pageable){
     Page<Transaction> transactionPage = transactionService.getIncomingTransactions(pageable);
@@ -37,7 +38,9 @@ public class TransactionController {
     return ResponseEntity.ok(transactionResponses);
   }
 
+
   @GetMapping("/outgoing")
+  @Operation(summary = "Get outgoing transactions", description = "Get all outgoing transactions")
   public ResponseEntity<Page<TransactionResponse>> getOutgoingTransactions(@PageableDefault (size = 15)Pageable pageable){
     Page<Transaction> transactionPage = transactionService.getOutgoingTransactions(pageable);
 

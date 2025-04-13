@@ -5,6 +5,7 @@ import hu.progressus.entity.User;
 import hu.progressus.response.AuthResponse;
 import hu.progressus.response.UserResponse;
 import hu.progressus.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -27,12 +28,14 @@ public class UserController {
   private final UserService userService;
 
   @GetMapping("/{userId}")
+  @Operation(summary = "Get user by ID", description = "Get a user by ID without their sensitive informations.")
   public ResponseEntity<UserResponse> getUserById(@PathVariable Long userId){
     return ResponseEntity.ok(userService.getUserById(userId));
   }
 
   @GetMapping("/all")
   @PreAuthorize("hasRole('ADMIN')")
+  @Operation(summary = "Get all users", description = "Get all users with all their informations. The user must be admin to access this endpoint.")
   public ResponseEntity<Page<UserResponse>> getAllUser(@PageableDefault(size = 15)
                                                           Pageable pageable){
     Page<User> userPage = userService.getAllUsers(pageable);
@@ -42,6 +45,7 @@ public class UserController {
   }
 
   @PatchMapping("/edit")
+  @Operation(summary = "Edit user", description = "Edit user details.")
   public ResponseEntity<AuthResponse> editUser(@RequestBody @Valid EditUserDto dto){
     return ResponseEntity.ok(userService.editUser(dto));
   }

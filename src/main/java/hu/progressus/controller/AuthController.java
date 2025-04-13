@@ -4,6 +4,7 @@ import hu.progressus.dto.CreateUserDto;
 import hu.progressus.dto.LoginDto;
 import hu.progressus.response.AuthResponse;
 import hu.progressus.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +23,19 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/registration")
+  @Operation(summary = "Register a new user", description = "Register a new user.")
   public ResponseEntity<AuthResponse> register(@Valid @RequestBody CreateUserDto dto, HttpServletResponse response) {
     return new ResponseEntity<>(authService.register(dto, response), HttpStatus.CREATED);
   }
 
   @PostMapping("/login")
+  @Operation(summary = "Login", description = "Login to the application.")
   public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginDto dto, HttpServletResponse response) {
     return ResponseEntity.ok(authService.login(dto, response));
   }
 
   @GetMapping("/authenticate")
+  @Operation(summary = "Authenticate", description = "Authenticate the user, returns the user details.")
   public ResponseEntity<AuthResponse> authenticate() {
     return ResponseEntity.ok(authService.authenticate());
   }
