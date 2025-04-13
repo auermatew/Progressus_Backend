@@ -3,6 +3,7 @@ package hu.progressus.controller;
 import hu.progressus.entity.Transaction;
 import hu.progressus.response.TransactionResponse;
 import hu.progressus.service.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,11 +23,12 @@ public class TransactionController {
   private final TransactionService transactionService;
 
   @PreAuthorize("hasRole('STUDENT')")
+  @Operation(summary = "Accept a lesson transaction", description = "Accept a lesson transaction by its ID as a student")
   @PostMapping("/transaction/{transactionId}/accept")
   public ResponseEntity<TransactionResponse> acceptTransaction(@PathVariable Long transactionId){
     return ResponseEntity.ok(transactionService.acceptLessonTransaction(transactionId));
   }
-
+  //TODO: add swagger operations for each endpoint in each controller
   @GetMapping("/incoming")
   public ResponseEntity<Page<TransactionResponse>> getIncomingTransactions(@PageableDefault (size = 15)Pageable pageable){
     Page<Transaction> transactionPage = transactionService.getIncomingTransactions(pageable);

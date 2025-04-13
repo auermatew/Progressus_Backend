@@ -21,7 +21,7 @@
 
 
 ### Adatbázis konfiguráció
-> (A Docker telepítése után) futtatni kell a backend project root mappájában található **docker-compose.yml** fájlt a következő paranccsal:<br/>
+> (A Docker telepítése után) futtatni kell a backend project root mappájában található [docker-compose.yml](https://github.com/auermatew/Progressus_Backend/blob/main/docker-compose.yml) fájlt a következő paranccsal:<br/>
 `docker compose up -d`
 
 **(Opcionális)**
@@ -59,4 +59,9 @@
    - testreszabható tanároldal ⏳
 ---
 ## API Dokumentáció | Tesztelés 📊
-> ...
+> A végpontokhoz tartozó Swagger API dokumentáció a http://localhost:8080/swagger-ui/index.html URL-en érhető el az app futtatása után, mely tartalmazza a végpontok leírását, paramétereit és válaszait. <br/>
+
+> A manuális teszteléshez [Postman](https://www.postman.com/downloads/) alkalmazást használtunk. <br/>
+> A hozzá tartozó Postman Collection megtalálható `Progressus.postman_collection.json` néven a projekt root mappájában, így a Postman alkalmazásba könnyen importálható.
+
+> Az egységtesztek a `src/test/java/hu.progressus` mappában találhatóak, melyek mindegyikének `✅ Test passed` státusszal kell rendelkezniük.<br/>
