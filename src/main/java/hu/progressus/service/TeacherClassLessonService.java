@@ -97,7 +97,6 @@ public class TeacherClassLessonService {
     }
   }
 
-// TODO: Implement method to delete a lesson
 
   public List<TeacherClassLessonResponse> getAllLessonsForTeacherByDateInterval(Long teacherId, LocalDateTime startDate, LocalDateTime endDate){
   List<TeacherClassLesson> lessons =teacherClassLessonRepository.findTeacherClassLessons(teacherId,startDate,endDate);
@@ -113,6 +112,18 @@ public class TeacherClassLessonService {
         .toList();
   }
 
+  public void deleteLesson(Long teacherClassLessonId){
+    User user = userUtils.currentUser();
+    TeacherClassLesson teacherClassLesson = teacherClassLessonRepository.findById(teacherClassLessonId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found"));
+    if (!user.getId().equals(teacherClassLesson.getTeacherClass().getTeacher().getUser().getId())) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Teacher can only delete their own lessons.");
+    }
+    if(LessonUtils.isLessonReserved(teacherClassLesson)){
+      throw new ResponseStatusException(HttpStatus.CONFLICT,"Cannot delete a lesson that has been reserved.");
+    }
+    teacherClassLessonRepository.delete(teacherClassLesson);
+  }
 
   public List<TeacherClassLessonResponse> getAllLessonsForTeacher(Long teacherId){
     if (!teacherClassRepository.existsByTeacherId(teacherId)) {
