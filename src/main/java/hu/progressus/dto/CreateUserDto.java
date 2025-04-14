@@ -36,6 +36,4 @@ public class CreateUserDto {
   @Size(max = 255)
   private String description;
 
-  @NotNull
-  private Role role;
 }

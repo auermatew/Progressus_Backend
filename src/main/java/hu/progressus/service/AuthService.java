@@ -3,6 +3,7 @@ package hu.progressus.service;
 import hu.progressus.dto.CreateUserDto;
 import hu.progressus.dto.LoginDto;
 import hu.progressus.entity.User;
+import hu.progressus.enums.Role;
 import hu.progressus.repository.UserRepository;
 import hu.progressus.response.AuthResponse;
 import hu.progressus.util.UserUtils;
@@ -53,7 +54,7 @@ public class AuthService {
         .dateOfBirth(dto.getDateOfBirth())
         .phoneNumber(dto.getPhoneNumber())
         .description(dto.getDescription())
-        .role(dto.getRole())
+        .role(Role.ROLE_STUDENT)
         .build();
 
     user = userRepository.save(user);
