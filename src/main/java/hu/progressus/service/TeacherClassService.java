@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,13 +57,22 @@ public class TeacherClassService {
     return TeacherClassResponse.of(teacherClass);
   }
 
-  //TODO: Cleanup this mess, i made this code at 3am, but it works haha
+
   @Transactional
   public TeacherClassResponse editTeacherClass(Long teacherClassId, EditTeacherClassDto dto) {
     User user = userUtils.currentUser();
+
     TeacherClass teacherClass = teacherClassRepository
         .findTeacherClassByIdAndTeacher_User_Id(teacherClassId, user.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Class not found"));
+
+    modifyByDto(teacherClass, dto);
+
+    teacherClass = teacherClassRepository.save(teacherClass);
+    return TeacherClassResponse.of(teacherClass);
+  }
+
+  private void modifyByDto(TeacherClass teacherClass, EditTeacherClassDto dto) {
     if (dto.getTitle() != null) {
       teacherClass.setTitle(dto.getTitle());
     }
@@ -72,46 +82,53 @@ public class TeacherClassService {
     if (dto.getPrice() != null) {
       teacherClass.setPrice(dto.getPrice());
     }
-
     if (dto.getSubjectIdsToRemove() != null && !dto.getSubjectIdsToRemove().isEmpty()) {
-      List<TeacherClassSubject> toRemove = teacherClassSubjectRepository
-          .findAllByTeacherClassIdAndSubjectIdIn(teacherClass.getId(), dto.getSubjectIdsToRemove());
-      teacherClassSubjectRepository.deleteAll(toRemove);
-      teacherClass.getSubjects().removeAll(toRemove);
-      toRemove.stream()
-          .map(tcs -> tcs.getSubject().getId())
-          .distinct()
-          .forEach(subjectId -> {
-            Subject subject = subjectRepository.findById(subjectId).orElse(null);
-
-            if (subject != null && !subject.isVerified()) {
-              boolean stillUsed = teacherClassSubjectRepository.existsBySubjectId(subjectId);
-              if (!stillUsed) {
-                subjectRepository.delete(subject);
-              }
-            }
-          });
+      deleteUnusedSubjects(teacherClass,dto);
     }
-
     if (dto.getSubjectsToAdd() != null && !dto.getSubjectsToAdd().isEmpty()) {
-      List<Subject> newSubjects = subjectService.findOrCreateSubjects(dto.getSubjectsToAdd());
-      for (Subject subject : newSubjects) {
-        boolean alreadyLinked = teacherClass.getSubjects().stream()
-            .anyMatch(tcs -> tcs.getSubject().getId().equals(subject.getId()));
-        if (!alreadyLinked) {
-          TeacherClassSubject tcs = TeacherClassSubject.builder()
-              .teacherClass(teacherClass)
-              .subject(subject)
-              .build();
-          teacherClassSubjectRepository.save(tcs);
-          teacherClass.getSubjects().add(tcs);
-        }
-      }
+      addNotExistingSubjects(teacherClass,dto);
     }
-    teacherClassRepository.save(teacherClass);
-    return TeacherClassResponse.of(teacherClass);
   }
 
+
+  private void addNotExistingSubjects(TeacherClass teacherClass, EditTeacherClassDto dto) {
+    List<Subject> newSubjects = subjectService.findOrCreateSubjects(dto.getSubjectsToAdd());
+    List<TeacherClassSubject> newTeacherClassSubjects = new ArrayList<>();
+    for (Subject subject : newSubjects) {
+      boolean alreadyLinked = teacherClass.getSubjects().stream()
+          .anyMatch(tcs -> tcs.getSubject().getId().equals(subject.getId()));
+      if (!alreadyLinked) {
+        TeacherClassSubject tcs = TeacherClassSubject.builder()
+            .teacherClass(teacherClass)
+            .subject(subject)
+            .build();
+        newTeacherClassSubjects.add(tcs);
+      }
+      teacherClassSubjectRepository.saveAllAndFlush(newTeacherClassSubjects);
+      teacherClass.getSubjects().addAll(newTeacherClassSubjects);
+    }
+
+  }
+
+  private void deleteUnusedSubjects(TeacherClass teacherClass, EditTeacherClassDto dto) {
+    List<TeacherClassSubject> toRemove = teacherClassSubjectRepository
+        .findAllByTeacherClassIdAndSubjectIdIn(teacherClass.getId(), dto.getSubjectIdsToRemove());
+    teacherClassSubjectRepository.deleteAll(toRemove);
+    teacherClassSubjectRepository.flush();
+    teacherClass.getSubjects().removeAll(toRemove);
+
+    List<Long> subjectIdsToCheck = toRemove.stream()
+        .map(tcs -> tcs.getSubject().getId())
+        .distinct()
+        .toList();
+
+    List<Long> deletableSubjectIds = subjectRepository.findUnusedUnverifiedSubjectIds(subjectIdsToCheck);
+
+    if (!deletableSubjectIds.isEmpty()) {
+      subjectRepository.deleteByIdIn(deletableSubjectIds);
+    }
+
+  }
 
   public void deleteTeacherClass(Long teacherClassId){
     User user = userUtils.currentUser();

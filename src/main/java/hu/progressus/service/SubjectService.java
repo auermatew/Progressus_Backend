@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,15 +40,51 @@ public class SubjectService {
     return subjectRepository.save(newSubject);
   }
 
+  public List<Subject> createMultipleSubjects(List<String> subjectNames, boolean isVerified) {
+    List<Subject> newSubjects = subjectNames.stream().map(name ->
+            Subject.builder()
+                .subject(name)
+                .isVerified(isVerified)
+                .build())
+        .toList();
+    return subjectRepository.saveAllAndFlush(newSubjects);
+  }
+
   public Subject findOrCreateSubjectByName(String subjectName){
     String formattedName = StringFormatter.formatString(subjectName);
     Optional<Subject> existingSubject = subjectRepository.findMatch(formattedName);
     return existingSubject.orElseGet(() -> createSubject(subjectName, false));
   }
-  public List<Subject> findOrCreateSubjects(List<String> subjects){
-    return subjects.stream()
-        .map(this::findOrCreateSubjectByName)
+
+  public List<Subject> findOrCreateSubjectsByName(List<String> subjectNames) {
+    List<String> formattedNames = subjectNames.stream()
+        .map(StringFormatter::formatString)
+        .distinct()
         .toList();
+
+    List<Subject> existingSubjects = subjectRepository.findMatchesFromList(formattedNames);
+    System.out.println("existingS:" + existingSubjects);
+    Set<String> existingNames = existingSubjects.stream()
+        .map(Subject::getSubject)
+        .collect(Collectors.toSet());
+    System.out.println("existingNames:" + existingNames);
+    List<String> missingNames = formattedNames.stream()
+        .filter(name -> !existingNames.contains(name))
+        .toList();
+    System.out.println("missingNames:" + missingNames);
+
+    List<Subject> newSubjects = createMultipleSubjects(missingNames, false);
+
+    List<Subject> allSubjects = new ArrayList<>();
+    allSubjects.addAll(existingSubjects);
+    allSubjects.addAll(newSubjects);
+
+    return allSubjects;
+  }
+
+
+  public List<Subject> findOrCreateSubjects(List<String> subjects){
+    return findOrCreateSubjectsByName(subjects);
   }
 
   public Subject createVerifiedSubject(String subjectName) {

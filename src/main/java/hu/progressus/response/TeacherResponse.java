@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class TeacherResponse {
+  private Long id;
 
   private String contactPhone;
 
@@ -13,6 +14,7 @@ public class TeacherResponse {
   private UserResponse user;
 
   protected TeacherResponse (Teacher teacher){
+    this.id = teacher.getId();
     this.contactPhone = teacher.getContactPhone();
     this.contactEmail = teacher.getContactEmail();
     this.user = UserResponse.ofLite(teacher.getUser());
