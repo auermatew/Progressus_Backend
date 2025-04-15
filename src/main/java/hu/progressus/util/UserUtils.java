@@ -1,5 +1,6 @@
 package hu.progressus.util;
 
+import hu.progressus.cache.CachedUserService;
 import hu.progressus.entity.User;
 import hu.progressus.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +13,12 @@ import org.springframework.web.server.ResponseStatusException;
 @Component
 public class UserUtils {
   private final UserRepository userRepository;
+  private final CachedUserService cachedUserService;
 
   public User currentUser (){
     try{
       User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-      return userRepository.findById(user.getId()).orElseThrow();
+      return cachedUserService.getUserByIdCached(user.getId());
     } catch (Exception e){
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"User not signed in");
     }

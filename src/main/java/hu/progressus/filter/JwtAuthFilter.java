@@ -1,5 +1,6 @@
 package hu.progressus.filter;
 
+import hu.progressus.cache.CachedUserService;
 import hu.progressus.entity.User;
 import hu.progressus.repository.UserRepository;
 import hu.progressus.service.JwtService;
@@ -26,6 +27,7 @@ import java.util.Optional;
 public class JwtAuthFilter extends OncePerRequestFilter {
   private final JwtService jwtService;
   private final UserRepository userRepository;
+  private final CachedUserService cachedUserService;
 
   @Override
   protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
@@ -46,20 +48,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 
     userId = Long.parseLong( jwtService.extractUserId(jwt));
-    Optional<User> user = userRepository.findById(userId);
+   /* Optional<User> user = userRepository.findById(userId);
 
     if (user.isEmpty()) {
       filterChain.doFilter(request,response);
       return;
-    }
+    } */
+
+    User user = cachedUserService.getUserByIdCached(userId);
 
     if (SecurityContextHolder.getContext().getAuthentication() == null){
-      if(jwtService.isTokenValid(jwt,user.get()))
+      if(jwtService.isTokenValid(jwt,user))
       {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-            user.get(),
+            user,
             null,
-            user.get().getAuthorities()
+            user.getAuthorities()
         );
         authToken.setDetails(
             new WebAuthenticationDetailsSource().buildDetails(request)
