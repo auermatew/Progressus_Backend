@@ -50,12 +50,6 @@ public class SubjectService {
     return subjectRepository.saveAllAndFlush(newSubjects);
   }
 
-  public Subject findOrCreateSubjectByName(String subjectName){
-    String formattedName = StringFormatter.formatString(subjectName);
-    Optional<Subject> existingSubject = subjectRepository.findMatch(formattedName);
-    return existingSubject.orElseGet(() -> createSubject(subjectName, false));
-  }
-
   public List<Subject> findOrCreateSubjectsByName(List<String> subjectNames) {
     List<String> formattedNames = subjectNames.stream()
         .map(StringFormatter::formatString)

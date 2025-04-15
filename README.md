@@ -47,16 +47,12 @@
 #### 5. Diák - tanár interakciók
    - óra jelentkezés ✅
    - óra vétele ✅
-   - tanár/óra rating ⏳
 #### 6. Egyéb funkciók
    - tantárgyak ✅
-   - user interests ⏳
    - képek AWS-sel ✅
 #### 7. Extra funkciók
    - basic admin features ✅
-   - featured tanárok ⏳
-   - user interests alapján tanár ajánlás ⏳
-   - testreszabható tanároldal ⏳
+   - featured tanárok (+transaction logic újragondolása) ⏳
 ---
 ## API Dokumentáció | Tesztelés 📊
 > A végpontokhoz tartozó Swagger API dokumentáció a http://localhost:8080/swagger-ui/index.html URL-en érhető el az app futtatása után, mely tartalmazza a végpontok leírását, paramétereit és válaszait. <br/>
