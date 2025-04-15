@@ -32,41 +32,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     throws ServletException, IOException {
     System.out.println("Request URI:" + request.getRequestURI());
 
-    if(Objects.equals(request.getRequestURI(), "/api/v1/auth/logout")){
-     Cookie cookie = new Cookie("token", null);
-      cookie.setMaxAge(0);
-      cookie.setPath("/");
-      response.addCookie(cookie);
-      Cookie refreshCookie = new Cookie("refreshToken", null);
-      refreshCookie.setMaxAge(0);
-      refreshCookie.setPath("/");
-      response.addCookie(refreshCookie);
-      filterChain.doFilter(request,response);
-      System.out.println(cookie.getName() + cookie.getValue() + refreshCookie.getName() + refreshCookie.getValue());
-      return;
-    }
-
     final String jwt;
     final long userId;
 
-    var tokenCookie = WebUtils.getCookie(request,"token");
+    var bearerToken = request.getHeader("Authorization");
 
-    if(tokenCookie == null){
-      var refreshTokenCookie = WebUtils.getCookie(request,"refreshToken");
-      System.out.println("no cookie");
-      if(refreshTokenCookie == null){
-        filterChain.doFilter(request,response);
-        System.out.println("no refresh cookie");
-        return;
-      } else {
-        jwt = refreshTokenCookie.getValue();
-        System.out.println("refreshTokenCookie: " + jwt);
-      }
+    if(bearerToken == null || !bearerToken.startsWith("Bearer ")){
+      filterChain.doFilter(request,response);
+      return;
     }
-    else {
-      jwt = tokenCookie.getValue();
-      System.out.println("tokenCookie: " + jwt);
-    }
+
+    jwt = bearerToken.substring(7);
+
 
     userId = Long.parseLong( jwtService.extractUserId(jwt));
     Optional<User> user = userRepository.findById(userId);
