@@ -1,5 +1,6 @@
 package hu.progressus.exceptionhandling;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -38,5 +39,13 @@ public class ExceptionsHandler {
       ConstraintViolationException exception) {
     CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
     return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatus()));
+  }
+  @ExceptionHandler(ExpiredJwtException.class)
+  public ResponseEntity<CustomErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
+    CustomErrorResponse errorResponse = new CustomErrorResponse(
+        HttpStatus.UNAUTHORIZED.value(),
+        "JWT token has expired. Please log in again."
+    );
+    return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
   }
 }
