@@ -22,6 +22,10 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * This filter checks if the incoming request has a valid JWT token.
+ * If valid, it sets the authentication in the security context.
+ */
 @RequiredArgsConstructor
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -29,6 +33,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   private final UserRepository userRepository;
   private final CachedUserService cachedUserService;
 
+  /**
+   * This method is called for every request to check if the JWT token is valid.
+   * If valid, it sets the authentication in the security context.
+   *
+   * @param request  the incoming HTTP request
+   * @param response the HTTP response
+   * @param filterChain the filter chain
+   * @throws ServletException if an error occurs during filtering
+   * @throws IOException if an I/O error occurs
+   */
   @Override
   protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
     throws ServletException, IOException {

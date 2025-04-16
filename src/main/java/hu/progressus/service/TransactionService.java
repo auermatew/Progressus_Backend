@@ -21,6 +21,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 
+/**
+ * Service class for handling transactions related to lesson reservations.
+ */
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
@@ -30,6 +33,13 @@ public class TransactionService {
   private final UserUtils userUtils;
 
 
+  /**
+   * Accepts a lesson transaction for a given reservation ID.
+   *
+   * @param reservationId the ID of the lesson reservation
+   * @return a TransactionResponse containing transaction details
+   * @throws ResponseStatusException if the reservation is not found, not approved, or already has a transaction
+   */
   @Transactional
   public TransactionResponse acceptLessonTransaction(Long reservationId ){
     LessonReservation reservation = lessonReservationRepository.findById(reservationId)
@@ -62,6 +72,14 @@ public class TransactionService {
     return TransactionResponse.of(saveTransaction);
   }
 
+  /**
+   * Processes the transfer of funds between two users.
+   *
+   * @param from the user sending the money
+   * @param to the user receiving the money
+   * @param amount the amount to be transferred
+   * @throws ResponseStatusException if the sender has insufficient funds
+   */
   @Transactional
   public void processTransfer(User from, User to, int amount){
     int updatedRows = userRepository.deductBalance(from.getId(), amount);
@@ -71,6 +89,13 @@ public class TransactionService {
     userRepository.creditBalance(to.getId(), amount);
   }
 
+  /**
+   * Saves a transaction for a given user and reservation.
+   *
+   * @param user the user making the transaction
+   * @param reservation the lesson reservation associated with the transaction
+   * @return the saved Transaction entity
+   */
   @Transactional
   public Transaction saveTransaction(User user, LessonReservation reservation){
     Transaction transaction = Transaction.builder()
@@ -81,11 +106,23 @@ public class TransactionService {
     return transactionRepository.save(transaction);
   }
 
+  /**
+   * Retrieves all transactions associated with the current user's incoming lessons.
+   *
+   * @param pageable pagination information
+   * @return a page of Transaction entities
+   */
   public Page<Transaction> getIncomingTransactions(Pageable pageable){
     User user = userUtils.currentUser();
     return transactionRepository.findAllByLessonReservation_TeacherClassLesson_TeacherClass_Teacher_User_IdOrderByDateDesc(user.getId(), pageable);
   }
 
+  /**
+   * Retrieves all transactions associated with the current user's outgoing lessons.
+   *
+   * @param pageable pagination information
+   * @return a page of Transaction entities
+   */
   public Page<Transaction> getOutgoingTransactions(Pageable pageable){
     User user = userUtils.currentUser();
     return transactionRepository.findAllByBillingDetails_User_IdOrderByDateDesc(user.getId(), pageable);

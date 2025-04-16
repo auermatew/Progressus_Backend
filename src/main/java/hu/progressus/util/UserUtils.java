@@ -9,12 +9,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Utility class for retrieving the currently authenticated user.
+ * It uses Spring Security's SecurityContextHolder to get the user details.
+ */
 @RequiredArgsConstructor
 @Component
 public class UserUtils {
   private final UserRepository userRepository;
   private final CachedUserService cachedUserService;
 
+  /**
+   * Retrieves the currently authenticated user.
+   *
+   * @return the User object of the currently authenticated user
+   * @throws ResponseStatusException if the user is not authenticated
+   */
   public User currentUser (){
     try{
       User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

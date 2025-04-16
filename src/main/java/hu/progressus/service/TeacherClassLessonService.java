@@ -24,6 +24,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Operations around scheduling, reserving, approving and querying lessons
+ * within teacher classes.
+ */
 @Service
 @RequiredArgsConstructor
 public class TeacherClassLessonService {
@@ -32,6 +36,13 @@ public class TeacherClassLessonService {
   private final TeacherClassLessonRepository teacherClassLessonRepository;
   private final LessonReservationRepository lessonReservationRepository;
 
+  /**
+   * Create a new lesson for the authenticated teacher.
+   *
+   * @param dto contains teacherClassId, startDate, endDate
+   * @return a DTO of the newly created lesson
+   * @throws ResponseStatusException if teacherClass not found or time conflict
+   */
   @Transactional
   public TeacherClassLessonResponse createTeacherClassLesson(CreateTeacherClassLessonDto dto){
     User user = userUtils.currentUser();
@@ -50,6 +61,12 @@ public class TeacherClassLessonService {
     return TeacherClassLessonResponse.of(teacherClassLesson);
   }
 
+  /**
+   * Reserve an available lesson for the current user (student).
+   *
+   * @param id the lesson slot ID
+   * @throws ResponseStatusException on not found, own-lesson reservation, already reserved, or duplicate reservation
+   */
   @Transactional
   public void reserveLesson(Long id) {
     User user = userUtils.currentUser();
@@ -72,6 +89,14 @@ public class TeacherClassLessonService {
     lessonReservationRepository.save(reservation);
   }
 
+  /**
+   * Approve or decline a pending lesson reservation (teacher’s action).
+   *
+   * @param id the reservation ID
+   * @param isApproved true to approve, false to decline
+   * @throws ResponseStatusException on not found, unauthorized, already handled,
+   *                                 or lesson now reserved
+   */
   @Transactional
   public void handleReservationStatus(Long id, boolean isApproved){
     User user = userUtils.currentUser();
@@ -97,7 +122,14 @@ public class TeacherClassLessonService {
     }
   }
 
-
+  /**
+   * Fetch all lessons for a teacher within a time window.
+   *
+   * @param teacherId the teacher’s user ID
+   * @param startDate inclusive start of interval
+   * @param endDate   inclusive end of interval
+   * @return list of lesson DTOs
+   */
   public List<TeacherClassLessonResponse> getAllLessonsForTeacherByDateInterval(Long teacherId, LocalDateTime startDate, LocalDateTime endDate){
   List<TeacherClassLesson> lessons =teacherClassLessonRepository.findTeacherClassLessons(teacherId,startDate,endDate);
   return lessons.stream()
@@ -105,6 +137,12 @@ public class TeacherClassLessonService {
       .toList();
   }
 
+  /**
+   * Fetch all lessons for a given class.
+   *
+   * @param teacherClassId the class ID
+   * @return list of lesson DTOs
+   */
   public List<TeacherClassLessonResponse> getAllLessonsForTeacherByClasses(Long teacherClassId){
     List<TeacherClassLesson> lessons = teacherClassLessonRepository.findTeacherClassLessonsByTeacherClass_Id(teacherClassId);
     return lessons.stream()
@@ -112,6 +150,12 @@ public class TeacherClassLessonService {
         .toList();
   }
 
+  /**
+   * Delete a lesson slot if unreserved and owned by current teacher.
+   *
+   * @param teacherClassLessonId the lesson ID
+   * @throws ResponseStatusException on not found, unauthorized, or reserved
+   */
   public void deleteLesson(Long teacherClassLessonId){
     User user = userUtils.currentUser();
     TeacherClassLesson teacherClassLesson = teacherClassLessonRepository.findById(teacherClassLessonId)
@@ -125,6 +169,13 @@ public class TeacherClassLessonService {
     teacherClassLessonRepository.delete(teacherClassLesson);
   }
 
+  /**
+   * Get all lessons across all classes for a teacher.
+   *
+   * @param teacherId the teacher user ID
+   * @return list of lesson DTOs
+   * @throws ResponseStatusException if teacher not found
+   */
   public List<TeacherClassLessonResponse> getAllLessonsForTeacher(Long teacherId){
     if (!teacherClassRepository.existsByTeacherId(teacherId)) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Teacher not found.");
@@ -135,6 +186,14 @@ public class TeacherClassLessonService {
         .toList();
   }
 
+  /**
+   * Fetch a specific lesson slot for a teacher.
+   *
+   * @param teacherId the teacher user ID
+   * @param lessonId the lesson slot ID
+   * @return the lesson DTO
+   * @throws ResponseStatusException if teacher or lesson missing
+   */
   public TeacherClassLessonResponse getSpecificLessonForTeacher(Long teacherId, Long lessonId){
     if (!teacherClassRepository.existsByTeacherId(teacherId)) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Teacher not found.");
@@ -145,6 +204,4 @@ public class TeacherClassLessonService {
 
     return TeacherClassLessonResponse.of(lesson);
   }
-
-
 }

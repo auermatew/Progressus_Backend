@@ -14,6 +14,10 @@ import software.amazon.awssdk.services.s3.model.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Service class for handling S3 operations.
+ */
+
 @Slf4j
 @Service
 public class S3Service {
@@ -31,6 +35,9 @@ public class S3Service {
 
   private S3Client s3Client;
 
+  /**
+   * Initializes the S3 client using the provided credentials and region.
+   */
   @PostConstruct
   public void initializeS3Client() {
     AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
@@ -41,6 +48,14 @@ public class S3Service {
     log.info("Initialized S3 client for bucket: {}", bucketName);
   }
 
+  /**
+   * Uploads a file to S3.
+   *
+   * @param fileName the name of the file to upload
+   * @param inputStream the InputStream of the file
+   * @throws IOException if an I/O error occurs
+   * @throws S3Exception if an S3 error occurs
+   */
   public void uploadFile(String fileName, InputStream inputStream) throws IOException,S3Exception {
       String contentType = "image/jpeg";
 
@@ -60,7 +75,13 @@ public class S3Service {
       logUpload(fileName);
   }
 
-  public void deleteFile(String key) throws Exception {
+  /**
+   * Deletes a file from S3.
+   *
+   * @param key the key of the file to delete
+   * @throws S3Exception if the AWS SDK reports an error during deletion
+   */
+  public void deleteFile(String key) throws S3Exception {
     DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
         .bucket(bucketName)
         .key(key)
@@ -71,11 +92,22 @@ public class S3Service {
   }
 
 
+  /**
+   * Generates a public URL for an image stored in S3.
+   *
+   * @param fileName the name of the file
+   * @return the generated URL
+   */
   // Format: https://<bucket-name>.s3.<region>.amazonaws.com/<file-name>
   public String generateImageUrl(String fileName) {
     return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, fileName);
   }
 
+  /**
+   * Logs the upload of a file to S3.
+   *
+   * @param key the key of the uploaded file
+   */
   private static void logUpload(String key) {
     log.info("File uploaded to S3 with key: {}", key);
   }

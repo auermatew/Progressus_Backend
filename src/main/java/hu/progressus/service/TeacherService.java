@@ -17,6 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Manages the Teacher profiles:
+ * registration, deletion, editing, and listing.
+ */
 @RequiredArgsConstructor
 @Service
 public class TeacherService {
@@ -25,6 +29,13 @@ public class TeacherService {
   private final UserService userService;
   private final TeacherRepository teacherRepository;
 
+  /**
+   * Registers the currently authenticated user as a teacher.
+   *
+   * @param dto the DTO containing contact fields
+   * @return an AuthResponse DTO of the saved entity
+   * @throws ResponseStatusException if the user is already a teacher
+   */
   public AuthResponse registerAsTeacher(CreateTeacherDto dto){
     User user = userUtils.currentUser();
     if(user.getTeacher() != null){
@@ -43,6 +54,11 @@ public class TeacherService {
     return AuthResponse.of(user);
   }
 
+  /**
+   * Deletes the currently authenticated user's teacher profile.
+   *
+   * @throws ResponseStatusException if the user is not a teacher
+   */
   public void deleteTeacher(){
     User user = userUtils.currentUser();
     if(user.getTeacher() == null){
@@ -54,14 +70,33 @@ public class TeacherService {
     userRepository.save(user);
   }
 
+  /**
+   * Retrieves the currently authenticated user's teacher profile.
+   *
+   * @return a TeacherResponse DTO of the saved entity
+   * @throws ResponseStatusException if the user is not a teacher
+   */
   public Teacher getTeacherById(Long teacherId){
     return teacherRepository.findById(teacherId).orElseThrow();
   }
 
+  /**
+   * Retrieves all teachers with pagination.
+   *
+   * @param pageable the pagination information
+   * @return a Page of TeacherResponse DTOs
+   */
   public Page<Teacher> getAllTeachers(Pageable pageable){
     return teacherRepository.findAllByOrderByIdAsc(pageable);
   }
 
+  /**
+   * Edits the currently authenticated user's teacher profile.
+   *
+   * @param dto the DTO containing contact fields
+   * @return a TeacherResponse DTO of the saved entity
+   * @throws ResponseStatusException if the user is not a teacher
+   */
   public TeacherResponse editTeacher(EditTeacherDto dto){
     User user = userUtils.currentUser();
     if(user.getTeacher() == null){

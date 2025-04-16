@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+/**
+ * Handles uploading, deleting, and managing user profile images in S3.
+ */
 @Service
 @RequiredArgsConstructor
 public class ImageService {
@@ -28,6 +31,13 @@ public class ImageService {
   private final UserUtils userUtils;
   private final UserRepository userRepository;
 
+  /**
+   * Upload a new profile picture, replacing any existing one.
+   *
+   * @param multipartFile the multipart image file
+   * @return a DTO with the saved Image info (URL, key, etc.)
+   * @throws ResponseStatusException if upload fails or image is invalid
+   */
 @Transactional
   public ImageResponse uploadProfilePicture (MultipartFile multipartFile){
   User user = userUtils.currentUser();
@@ -43,6 +53,11 @@ public class ImageService {
     }
   }
 
+  /**
+   * Remove the current user's profile picture from S3 and database.
+   *
+   * @throws ResponseStatusException if user has no picture or deletion fails
+   */
   @Transactional
   public void removeProfilePicture (){
   User user = userUtils.currentUser();
@@ -53,6 +68,12 @@ public class ImageService {
   deleteImage(user);
   }
 
+  /**
+   * Internal helper to delete image both from S3 and DB, and clear user's reference.
+   *
+   * @param user the owner of the image
+   * @throws ResponseStatusException on any deletion error
+   */
   private void deleteImage(User user){
     Image image = user.getProfileImg();
     try {
@@ -68,6 +89,13 @@ public class ImageService {
 
   }
 
+  /**
+   * Validate, upload to S3, and persist a new Image entity.
+   *
+   * @param multipartFile the multipart file to upload
+   * @return the persisted Image entity
+   * @throws ResponseStatusException on invalid type or IO errors
+   */
   private Image uploadImage(MultipartFile multipartFile) {
     if (!isValidImage(multipartFile)) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid image type.");
@@ -84,11 +112,24 @@ public class ImageService {
 
   }
 
+  /**
+   * Check if the multipart file has an image content type.
+   *
+   * @param file the multipart file
+   * @return true if content type starts with "image/"
+   */
   private boolean isValidImage(MultipartFile file) {
     String contentType = file.getContentType();
     return contentType != null && contentType.startsWith("image/");
   }
 
+  /**
+   * Generate a unique filename, upload the file stream to S3, and return the key.
+   *
+   * @param multipartFile the multipart file
+   * @return the generated filename key in S3
+   * @throws IOException if reading the input stream fails
+   */
   private String uploadImageToS3(MultipartFile multipartFile) throws IOException {
     String fileName = UUID.randomUUID() + "_" + multipartFile.getOriginalFilename();
     try (InputStream inputStream = multipartFile.getInputStream()) {
@@ -98,6 +139,12 @@ public class ImageService {
     return fileName;
   }
 
+  /**
+   * Saves a new Image entity to the database for the current user.
+   *
+   * @param filename the unique filename (key) of the image stored in S3
+   * @return the persisted Image entity
+   */
   private Image saveToDatabase(String filename){
     User user = userUtils.currentUser();
     var url = s3Service.generateImageUrl(filename);

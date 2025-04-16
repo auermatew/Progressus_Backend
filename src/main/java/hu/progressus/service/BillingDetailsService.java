@@ -12,12 +12,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Manages each user's billing details: create, read and update.
+ */
 @Service
 @RequiredArgsConstructor
 public class BillingDetailsService {
   private final UserUtils userUtils;
   private final BillingDetailsRepository billingDetailsRepository;
 
+  /**
+   * Creates billing details for the currently authenticated user.
+   *
+   * @param dto the DTO containing address fields
+   * @return a BillingDetailsResponse DTO of the saved entity
+   * @throws ResponseStatusException if the user already has billing details
+   */
   public BillingDetailsResponse createBillingDetails(CreateBillingDetailsDto dto) {
     User user = userUtils.currentUser();
 
@@ -36,6 +46,12 @@ public class BillingDetailsService {
     return BillingDetailsResponse.of(billingDetails);
   }
 
+  /**
+   * Retrieves billing details of the current user.
+   *
+   * @return a BillingDetailsResponse DTO
+   * @throws ResponseStatusException if none exist
+   */
   public BillingDetailsResponse getBillingDetails() {
     User user = userUtils.currentUser();
     if (user.getBillingDetails() == null) {
@@ -43,6 +59,14 @@ public class BillingDetailsService {
     }
     return BillingDetailsResponse.of(user.getBillingDetails());
   }
+
+  /**
+   * Admin-only: Retrieves billing details by user ID.
+   *
+   * @param userId the ID of the user whose billing details to fetch
+   * @return a BillingDetailsResponse DTO
+   * @throws ResponseStatusException if not found
+   */
 
   public BillingDetailsResponse getBillingDetailsByUserId(Long userId) {
     if (!billingDetailsRepository.existsByUserId(userId)) {
@@ -53,6 +77,14 @@ public class BillingDetailsService {
     return BillingDetailsResponse.of(billingDetails);
   }
 
+  /**
+   * Edits the billing details of the current user.
+   * Only non-null fields in the DTO will be updated.
+   *
+   * @param dto the DTO containing updated address fields
+   * @return a BillingDetailsResponse DTO of the updated entity
+   * @throws ResponseStatusException if billing details do not exist
+   */
   public BillingDetailsResponse editBillingDetails(EditBillingDetailsDto dto){
     User user  = userUtils.currentUser();
     BillingDetails billingDetails = billingDetailsRepository.findByUserId(user.getId())
