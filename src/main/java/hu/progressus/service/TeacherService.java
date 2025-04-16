@@ -11,6 +11,7 @@ import hu.progressus.response.AuthResponse;
 import hu.progressus.response.TeacherResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,10 @@ public class TeacherService {
    * @return an AuthResponse DTO of the saved entity
    * @throws ResponseStatusException if the user is already a teacher
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "@userUtils.currentUser().id"
+  )
   public AuthResponse registerAsTeacher(CreateTeacherDto dto){
     User user = userUtils.currentUser();
     if(user.getTeacher() != null){
@@ -59,6 +64,10 @@ public class TeacherService {
    *
    * @throws ResponseStatusException if the user is not a teacher
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "@userUtils.currentUser().id"
+  )
   public void deleteTeacher(){
     User user = userUtils.currentUser();
     if(user.getTeacher() == null){
@@ -97,6 +106,10 @@ public class TeacherService {
    * @return a TeacherResponse DTO of the saved entity
    * @throws ResponseStatusException if the user is not a teacher
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "@userUtils.currentUser().id"
+  )
   public TeacherResponse editTeacher(EditTeacherDto dto){
     User user = userUtils.currentUser();
     if(user.getTeacher() == null){

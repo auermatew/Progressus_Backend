@@ -12,6 +12,7 @@ import hu.progressus.repository.UserRepository;
 import hu.progressus.response.TransactionResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -80,6 +81,10 @@ public class TransactionService {
    * @param amount the amount to be transferred
    * @throws ResponseStatusException if the sender has insufficient funds
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "#to.id"
+  )
   @Transactional
   public void processTransfer(User from, User to, int amount){
     int updatedRows = userRepository.deductBalance(from.getId(), amount);

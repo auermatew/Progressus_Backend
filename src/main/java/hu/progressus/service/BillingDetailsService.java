@@ -8,6 +8,7 @@ import hu.progressus.repository.BillingDetailsRepository;
 import hu.progressus.response.BillingDetailsResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,6 +29,10 @@ public class BillingDetailsService {
    * @return a BillingDetailsResponse DTO of the saved entity
    * @throws ResponseStatusException if the user already has billing details
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "@userUtils.currentUser().id"
+  )
   public BillingDetailsResponse createBillingDetails(CreateBillingDetailsDto dto) {
     User user = userUtils.currentUser();
 
@@ -85,6 +90,10 @@ public class BillingDetailsService {
    * @return a BillingDetailsResponse DTO of the updated entity
    * @throws ResponseStatusException if billing details do not exist
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "@userUtils.currentUser().id"
+  )
   public BillingDetailsResponse editBillingDetails(EditBillingDetailsDto dto){
     User user  = userUtils.currentUser();
     BillingDetails billingDetails = billingDetailsRepository.findByUserId(user.getId())

@@ -15,6 +15,7 @@ import hu.progressus.response.TeacherClassResponse;
 import hu.progressus.util.LessonUtils;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

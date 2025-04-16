@@ -8,6 +8,7 @@ import hu.progressus.response.AuthResponse;
 import hu.progressus.response.UserResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -78,6 +79,10 @@ public class UserService{
    * @return an AuthResponse DTO reflecting updated info
    * @throws ResponseStatusException on phone conflict
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "@userUtils.currentUser().id"
+  )
   public AuthResponse editUser(EditUserDto dto){
     User user = userUtils.currentUser();
     ThrowUserPhoneExists(dto.getPhoneNumber());

@@ -8,6 +8,7 @@ import hu.progressus.repository.UserRepository;
 import hu.progressus.response.ImageResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,10 @@ public class ImageService {
    * @return a DTO with the saved Image info (URL, key, etc.)
    * @throws ResponseStatusException if upload fails or image is invalid
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "@userUtils.currentUser().id"
+  )
 @Transactional
   public ImageResponse uploadProfilePicture (MultipartFile multipartFile){
   User user = userUtils.currentUser();
@@ -58,6 +63,10 @@ public class ImageService {
    *
    * @throws ResponseStatusException if user has no picture or deletion fails
    */
+  @CacheEvict(
+      value = "userCache",
+      key = "@userUtils.currentUser().id"
+  )
   @Transactional
   public void removeProfilePicture (){
   User user = userUtils.currentUser();
