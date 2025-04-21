@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,5 +40,11 @@ public class ExceptionsHandler {
       ConstraintViolationException exception) {
     CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
     return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatus()));
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<CustomErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+    CustomErrorResponse body = new CustomErrorResponse(HttpStatus.FORBIDDEN.value(), "Access denied");
+    return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
   }
 }
