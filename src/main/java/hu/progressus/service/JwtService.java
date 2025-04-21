@@ -2,6 +2,7 @@ package hu.progressus.service;
 
 import hu.progressus.entity.User;
 import io.jsonwebtoken.io.Decoders;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,7 +16,14 @@ import java.util.function.Function;
  */
 @Service
 public class JwtService {
-  private static final String SECRET_KEY = "bWVtb3J5c3VjaHNsb3BlbW9kZWx3aGVuZXZlcmZlbmNlbm90ZWRvb3JiYWxhbmNlY2x1Yndyb25nc3VjY2Vzc2Z1bHN3aW1hdGJyZWF0aGJvYXRmcm9tcHJvZ3JhbXdvcmtsaWtlbHl0aGVzZXJhaW5veHlnZW5kZWVwcG9lbXRoaXJkZG9jdG9yY29tbWFuZG5pY2VkaW5uZXJib25lYXNrY29tcG9zZWRmZWxsY2FuYWx1cG9uZHJvcHRpdGxlZnJpZW5kbHlhY3RpdmVjb2F0Y2hhbmNldHdlbnR5cmVtZW1iZXJ0aHJlYWRidXN5ZmxpZXNjcmVhbWVudGVyZg==";
+  @Value("${jwt.secretKey}")
+  private String secretKey;
+
+  @Value("${jwt.access-token-expiration-ms}")
+  private long accessTokenExpirationMs;
+
+  @Value("${jwt.refresh-token-expiration-ms}")
+  private long refreshTokenExpirationMs;
 
   /**
    * Compute time-to-live of a token in seconds.
@@ -56,12 +64,13 @@ public class JwtService {
    * @param user the authenticated user
    * @return signed JWT string
    */
-  public static String generateToken(User user) {
-    return Jwts
-        .builder()
+  public String generateToken(User user) {
+    Date now = new Date();
+    Date expiry = new Date(now.getTime() + accessTokenExpirationMs);
+    return Jwts.builder()
         .subject(String.valueOf(user.getId()))
-        .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis()+ (1000 * 60) * 60))
+        .issuedAt(now)
+        .expiration(expiry)
         .signWith(getSigningKey())
         .compact();
   }
@@ -72,12 +81,13 @@ public class JwtService {
    * @param user the authenticated user
    * @return signed JWT string
    */
-  public static String generateRefreshToken(User user) {
-    return Jwts
-        .builder()
+  public String generateRefreshToken(User user) {
+    Date now = new Date();
+    Date expiry = new Date(now.getTime() + refreshTokenExpirationMs);
+    return Jwts.builder()
         .subject(String.valueOf(user.getId()))
-        .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis()+ (1000L * 60L) * 60L * 24L * 30L))
+        .issuedAt(now)
+        .expiration(expiry)
         .signWith(getSigningKey())
         .compact();
   }
@@ -133,8 +143,8 @@ public class JwtService {
    *
    * @return an HMAC-SHA key
    */
-  private static Key getSigningKey() {
-    byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+  private Key getSigningKey() {
+    byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
   }
 }

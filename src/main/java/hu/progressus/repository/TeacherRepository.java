@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher,Long> {
-
+  boolean existsByContactEmail(String contactEmail);
+  boolean existsByContactPhone(String contactPhone);
   Page<Teacher> findAllByOrderByIdAsc(Pageable pageable);
 }

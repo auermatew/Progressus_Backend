@@ -39,15 +39,21 @@ public class TeacherService {
    */
   @CacheEvict(
       value = "userCache",
-      key = "@userUtils.currentUser().id"
+      key = "@userUtils.currentUser().id",
+      beforeInvocation = true
   )
   public AuthResponse registerAsTeacher(CreateTeacherDto dto){
     User user = userUtils.currentUser();
     if(user.getTeacher() != null){
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "already a teacher");
     }
-    userService.ThrowUserEmailExists(dto.getContactEmail());
-    userService.ThrowUserPhoneExists(dto.getContactPhone());
+    if ( teacherRepository.existsByContactEmail(dto.getContactEmail()) ) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Contact email already in use");
+    }
+    if ( teacherRepository.existsByContactPhone(dto.getContactPhone()) ) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Contact phone already in use");
+    }
+
     user.setTeacher(
         Teacher.builder().user(user)
         .contactEmail(dto.getContactEmail())
@@ -83,10 +89,11 @@ public class TeacherService {
    * Retrieves the currently authenticated user's teacher profile.
    *
    * @return a TeacherResponse DTO of the saved entity
-   * @throws ResponseStatusException if the user is not a teacher
+   * @throws ResponseStatusException if the user not found or is not a teacher
    */
   public Teacher getTeacherById(Long teacherId){
-    return teacherRepository.findById(teacherId).orElseThrow();
+    return teacherRepository.findById(teacherId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Teacher not found or user is not a teacher"));
   }
 
   /**

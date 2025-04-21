@@ -10,13 +10,16 @@
 ### Futattás
 1. Projekt cloneozása:
 
-`git clone https://github.com/auermatew/Progressus_Backend.git `
+```bash 
+git clone https://github.com/auermatew/Progressus_Backend.git 
+```
 
 
 2. A már konfigurált Docker container elindítása
 
+3. A backend projekt `src/main/resources` packagen belül `secrets.properties` fájl létrehozása melynek szükséges tartalma megtalálható a [secrets.example.properties](https://github.com/auermatew/Progressus_Backend/blob/main/) fájlban.
 
-3. Backend applikáció elindítása
+4. Backend applikáció elindítása
 
 
 

@@ -39,7 +39,7 @@ public class AuthService {
    * @return a Cookie named "refreshToken" with the signed JWT
    */
   public Cookie refreshTokenCookie(User user){
-    var refreshToken = JwtService.generateRefreshToken(user);
+    var refreshToken = jwtService.generateRefreshToken(user);
     Cookie cookie = new Cookie("refreshToken",refreshToken);
     cookie.setMaxAge(jwtService.getExpirationSeconds(refreshToken));
     cookie.setPath("/");
@@ -83,7 +83,7 @@ public class AuthService {
 
     response.addCookie(refreshTokenCookie(user));
 
-    var token = JwtService.generateToken(user);
+    var token = jwtService.generateToken(user);
     return new TokenResponse(token, jwtService.getExpirationSeconds(token));
   }
 
@@ -107,7 +107,7 @@ public class AuthService {
     }
 
     response.addCookie(refreshTokenCookie(user));
-    var token = JwtService.generateToken(user);
+    var token = jwtService.generateToken(user);
     return new TokenResponse(token, jwtService.getExpirationSeconds(token));
   }
 
@@ -146,7 +146,7 @@ public class AuthService {
 
     response.addCookie(refreshTokenCookie(user));
 
-    var token = JwtService.generateToken(user);
+    var token = jwtService.generateToken(user);
     return new TokenResponse(token, jwtService.getExpirationSeconds(token));
   }
 

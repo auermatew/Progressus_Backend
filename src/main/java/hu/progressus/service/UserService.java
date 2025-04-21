@@ -56,9 +56,11 @@ public class UserService{
    *
    * @param userId the target user ID
    * @return a lite UserResponse DTO
+   * @throws ResponseStatusException if the user is not found
    */
   public UserResponse getUserById(Long userId){
-    return UserResponse.ofLite(userRepository.findById(userId).orElseThrow());
+    return UserResponse.ofLite(userRepository.findById(userId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")));
   }
 
   /**
