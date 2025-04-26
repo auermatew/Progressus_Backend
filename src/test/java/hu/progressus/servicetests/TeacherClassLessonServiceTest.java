@@ -145,4 +145,56 @@ public class TeacherClassLessonServiceTest {
     assertEquals(HttpStatus.CONFLICT, result.getStatusCode());
   }
 
+  //region deleteLesson() tests
+  @Test
+  void whenLessonNotFound_ThrowsResponseStatusException() {
+    lenient().when(userUtils.currentUser()).thenReturn(user);
+    lenient().when(teacherClassLessonRepository.findById(1L)).thenReturn(Optional.empty());
+
+    var result = assertThrows(ResponseStatusException.class, () ->
+        teacherClassLessonService.deleteLesson(1L));
+
+    assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+  }
+
+  @Test
+  void whenCurrentUserIsNotOwnerOfDeleteLesson_ThrowsResponseStatusException() {
+    lenient().when(userUtils.currentUser()).thenReturn(secondaryUser);
+    lenient().when(teacherClassLessonRepository.findById(1L))
+        .thenReturn(Optional.of(teacherClassLesson));
+
+    var result = assertThrows(ResponseStatusException.class, () ->
+        teacherClassLessonService.deleteLesson(1L));
+
+    assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
+  }
+
+  @Test
+  void whenLessonIsReserved_ThrowsResponseStatusException() {
+    lessonReservation.setStatus(LessonReservationStatus.APPROVED);
+    teacherClassLesson.setLessonReservations(List.of(lessonReservation));
+
+    lenient().when(userUtils.currentUser()).thenReturn(user);
+    lenient().when(teacherClassLessonRepository.findById(1L))
+        .thenReturn(Optional.of(teacherClassLesson));
+
+    var result = assertThrows(ResponseStatusException.class, () ->
+        teacherClassLessonService.deleteLesson(1L));
+
+    assertEquals(HttpStatus.CONFLICT, result.getStatusCode());
+  }
+
+  @Test
+  void whenUnreservedLessonAndOwner_DeletesLesson() {
+    teacherClassLesson.setLessonReservations(new ArrayList<>());
+
+    lenient().when(userUtils.currentUser()).thenReturn(user);
+    lenient().when(teacherClassLessonRepository.findById(1L))
+        .thenReturn(Optional.of(teacherClassLesson));
+
+    teacherClassLessonService.deleteLesson(1L);
+
+    verify(teacherClassLessonRepository).delete(teacherClassLesson);
+  }
+  //endregion
 }

@@ -57,7 +57,6 @@ docker compose up -d
    - képek AWS-sel ✅
 #### 7. Extra funkciók
    - basic admin features ✅
-   - featured tanárok (+transaction logic újragondolása) ⏳
 ---
 ## API Dokumentáció | Tesztelés 📊
 > A végpontokhoz tartozó Swagger API dokumentáció a http://localhost:8080/swagger-ui/index.html URL-en érhető el az app futtatása után, mely tartalmazza a végpontok leírását, paramétereit és válaszait. <br/>
