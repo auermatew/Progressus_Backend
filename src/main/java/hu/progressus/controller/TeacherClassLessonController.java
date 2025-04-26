@@ -1,11 +1,16 @@
 package hu.progressus.controller;
 
 import hu.progressus.dto.CreateTeacherClassLessonDto;
+import hu.progressus.entity.LessonReservation;
+import hu.progressus.response.LessonReservationResponse;
 import hu.progressus.response.TeacherClassLessonResponse;
 import hu.progressus.service.TeacherClassLessonService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -81,6 +86,17 @@ public class TeacherClassLessonController {
   @Operation(summary = "Delete a lesson", description = "Delete a lesson. The user must be a teacher to access this endpoint.")
   public void deleteLesson(@PathVariable Long teacherClassLessonId){
     teacherClassLessonService.deleteLesson(teacherClassLessonId);
+  }
+
+  @PreAuthorize("hasRole('TEACHER')")
+  @GetMapping("/pending-reservations")
+  @Operation(summary = "Get all pending reservations", description = "Get all pending reservations for the current teacher. The user must be a teacher to access this endpoint.")
+  public  ResponseEntity<Page<LessonReservationResponse>> getAllPendingReservations(@PageableDefault(size = 15) Pageable pageable)
+  {
+    Page<LessonReservation> lessons = teacherClassLessonService.getAllPendingLessonsForTeacher(pageable);
+
+    Page<LessonReservationResponse> lessonResponse = lessons.map(LessonReservationResponse::of);
+    return ResponseEntity.ok(lessonResponse);
   }
 
 }

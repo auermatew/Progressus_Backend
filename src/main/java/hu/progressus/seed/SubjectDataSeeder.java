@@ -3,11 +3,13 @@ package hu.progressus.seed;
 import hu.progressus.entity.Subject;
 import hu.progressus.repository.SubjectRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@Order(1)
 public class SubjectDataSeeder implements CommandLineRunner {
 
   private final SubjectRepository subjectRepository;

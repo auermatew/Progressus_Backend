@@ -28,5 +28,6 @@ public class CreateTeacherClassDto {
   private Integer price;
 
   @NotNull
+  @Size(min=1,message = "At least one subject must be added")
   private List<String> subjects;
 }

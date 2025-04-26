@@ -16,6 +16,8 @@ import hu.progressus.util.LessonUtils;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,6 +88,7 @@ public class TeacherClassLessonService {
         .teacherClassLesson(teacherClassLesson)
         .user(user)
         .status(LessonReservationStatus.PENDING)
+        .createdAt(LocalDateTime.now())
         .build();
     lessonReservationRepository.save(reservation);
   }
@@ -204,5 +207,17 @@ public class TeacherClassLessonService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lesson not found for this teacher."));
 
     return TeacherClassLessonResponse.of(lesson);
+  }
+
+  /**
+   * Retrieve all pending lesson reservations for the currently authenticated teacher.
+   *
+   * @param pageable the pagination information
+   * @return a paginated list of pending lesson reservations
+   */
+  public Page<LessonReservation> getAllPendingLessonsForTeacher(Pageable pageable) {
+    User user = userUtils.currentUser();
+    return lessonReservationRepository.findAllByTeacherClassLesson_TeacherClass_Teacher_User_IdAndStatusOrderByCreatedAtDesc(
+        user.getId(), LessonReservationStatus.PENDING, pageable);
   }
 }
