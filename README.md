@@ -69,8 +69,10 @@ docker exec -i progressus_database \
 #### 7. Extra funkciók
    - basic admin features ✅
 ---
-## API Dokumentáció | Tesztelés 📊
+## Dokumentáció | Tesztelés 📊
 > A végpontokhoz tartozó Swagger API dokumentáció a http://localhost:8080/swagger-ui/index.html URL-en érhető el az app futtatása után, mely tartalmazza a végpontok leírását, paramétereit és válaszait. <br/>
+
+> Minden fontosabb funkciónál javadoc dokumentáció található.
 
 > A manuális teszteléshez [Postman](https://www.postman.com/downloads/) alkalmazást használtunk. <br/>
 > A hozzá tartozó Postman Collection megtalálható [Progressus.postman_collection.json](https://github.com/auermatew/Progressus_Backend/blob/main/Progressus.postman_collection.json) néven a projekt root mappájában, így a Postman alkalmazásba könnyen importálható.
