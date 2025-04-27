@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"teacherSubjectTags", "userInterests", "teacherClassSubjects"})
+@ToString(exclude = {"teacherClassSubjects"})
 @Entity
 @Table(name = "subjects",
 indexes = {
@@ -35,12 +35,6 @@ public class Subject {
   private String subject;
 
   private boolean isVerified;
-
-  @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
-  private List<TeacherSubjectTag> teacherSubjectTags;
-
-  @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
-  private List<UserInterest> userInterests;
 
   @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
   private List<TeacherClassSubject> teacherClassSubjects;

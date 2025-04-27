@@ -42,9 +42,6 @@ public class Teacher {
   private String contactEmail;
 
   @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
-  private List<TeacherSubjectTag> subjects;
-
-  @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
   @JsonManagedReference
   private List<TeacherClass> teacherClasses;
 

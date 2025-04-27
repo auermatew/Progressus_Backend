@@ -77,8 +77,6 @@ public class User implements UserDetails {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private BillingDetails billingDetails;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  private List<UserInterest> userInterests;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<LessonReservation> lessonReservations;
@@ -90,9 +88,6 @@ public class User implements UserDetails {
   private void onCreate(){
     if (this.balance == null){
       this.balance = 0;
-    }
-    if (this.userInterests == null){
-      this.userInterests = new ArrayList<>();
     }
     /*if (this.teacherClassLessons == null){
       this.teacherClassLessons = new ArrayList<>();
