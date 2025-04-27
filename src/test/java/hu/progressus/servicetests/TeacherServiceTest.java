@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,7 @@ public class TeacherServiceTest {
         .contactEmail("old@example.com")
         .contactPhone("000000")
         .build();
+    storedTeacher.setTeacherClasses(new ArrayList<>());
   }
 
   //region registerAsTeacher() tests

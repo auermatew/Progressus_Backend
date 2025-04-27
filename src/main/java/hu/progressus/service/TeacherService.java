@@ -8,6 +8,7 @@ import hu.progressus.enums.Role;
 import hu.progressus.repository.TeacherRepository;
 import hu.progressus.repository.UserRepository;
 import hu.progressus.response.AuthResponse;
+import hu.progressus.response.SubjectResponse;
 import hu.progressus.response.TeacherResponse;
 import hu.progressus.util.UserUtils;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 /**
  * Manages the Teacher profiles:
