@@ -9,3 +9,5 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: progressus_database
+    volumes:
+      - ./dump.sql:/tmp/dump.sql
