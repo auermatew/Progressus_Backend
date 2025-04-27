@@ -57,17 +57,17 @@ docker exec -i progressus_database \
 #### 2. Autentikáció JWT-vel és cookies ✅
 #### 3. Autorizáció ✅
 #### 4. Tanár features
-   - authorization ✅
-   - tanórák ✅
-   - naptár ✅
+   - Authorization ✅
+   - Tanórák ✅
+   - Naptár ✅
 #### 5. Diák - tanár interakciók
-   - óra jelentkezés ✅
-   - óra vétele ✅
+   - Óra jelentkezés ✅
+   - Óra vétele ✅
 #### 6. Egyéb funkciók
-   - tantárgyak ✅
-   - képek AWS-sel ✅
+   - Tantárgyak ✅
+   - Képek AWS-sel ✅
 #### 7. Extra funkciók
-   - basic admin features ✅
+   - Basic admin features ✅
 ---
 ## Dokumentáció | Tesztelés 📊
 > A végpontokhoz tartozó Swagger API dokumentáció a http://localhost:8080/swagger-ui/index.html URL-en érhető el az app futtatása után, mely tartalmazza a végpontok leírását, paramétereit és válaszait. <br/>
@@ -82,3 +82,52 @@ docker exec -i progressus_database \
 ---
 ## Adatbázis-modell diagram
 ![Adatbázis model](./datamodel.png "Adatbázis diagram")
+
+---
+## Funkciók 📈
+### Az alkalmazás a következő főbb műveleteket támogatja:
+- **Felhasználói fiók-kezelés 👤**
+    - Regisztráció és bejelentkezés e-mail/jelszó párral
+    - JWT-based autentikáció (access + refresh token)
+    - Kijelentkezés, refresh token érvénytelenítése
+    - Felhasználói adatok lekérdezése és szerkesztése
+    - Más felhasználók adatainak lekérdezése (szenzitív adatok nélkül)
+    - Admin jogosultsággal az összes felhasználó adatainak lekérése
+- **Számlázási adatok kezelése📋**
+    - Számlázási adatok létrehozása, lekérdezése és módosítása a saját fiókhoz
+    - Admin jogosultsággal bármely felhasználó számlázási adatainak lekérése
+- **Tantárgyak 📚**
+    - Tantárgylista lekérdezése
+    - Specifikus tantárgy lekérdezése
+    - Admin jogosultsággal új tantárgyak létrehozása, meglévők szerkesztése vagy törlése
+- **Tanár profil 🧑‍🏫**
+    - Diákból tanárrá válás regisztrációs folyamattal
+    - Tanár elérhetőségeinek szerkesztése
+    - Összes tanár és specifikus tanár lekérése
+- **Tanár óratípus (TeacherClass) 📖**
+    - Új „óratípus” (TeacherClass) létrehozása, szerkesztése és törlése
+    - Az óratípushoz tartozó órák automatikusan létrejönnek unverified státusszal amennyiben nem léteznek még. Ezeket az admin tudja jóváhagyni.
+    - Összes/specifikus óratípus listázása tanár szerint
+- **Óra kezelése (TeacherClassLesson) 📆**
+    - Tanárok létrehozhatnak, szerkeszthetnek és törölhetnek példányosított TeacherClass-okat (órákat)
+    - Diákok órafoglalási kérelmeket küldhetnek
+    - Tanárok elfogadhatják vagy elutasíthatják a beérkezett foglalásokat
+    - Egy tanárhoz tartozó összes, illetve egy konkrét óra lekérdezése
+    - Óratípus szerinti órák listázása
+    - Dátum szerint szűrhető órák listázása (calendar)
+    - Függőben lévő órák listázása
+- **Tranzakciók💰**
+    - Diákok fizetést indíthatnak az elfogadott órákra
+    - Tanárok lekérdezhetik bejövő tranzakcióikat
+    - Diákok lekérdezhetik a kimenő tranzakcióikat
+    - Egyenleg automatikus levonása és jóváírása
+- **Profilkép kezelés🌅**
+    - Saját profilkép feltöltése, szerkesztése és törlése AWS S3-en keresztül
+---
+### Seedelés 🌱
+- **Tantárgyak létrehozása**  
+  A `SubjectDataSeeder` futáskor létrehozza az alapértelmezett(verified) tantárgyakat (Matematika, Fizika, Kémia...) csak egyszer, ha még nem léteznek.
+
+- **Felhasználói egyenleg feltöltése**  
+  A `BalanceDataSeeder` minden indításkor végignézi az összes felhasználót, és amennyiben a `balance` értéke null vagy 20 000 alatt van, beállítja 20 000-re.
+
